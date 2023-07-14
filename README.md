@@ -2,10 +2,12 @@
 
 ## First Phase
 
--[ ] Login
+- [ ] Login
 
--[ ]Register -[ ]Customer -[ ]Seller
+- [ ]Register
+- [ ]Customer
+- [ ]Seller
 
 ## Second Phase
 
--[ ] Dashboard
+- [ ] Dashboard
