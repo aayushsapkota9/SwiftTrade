@@ -5,8 +5,8 @@
 - [ ] Login
 
 - [ ]Register
-- [ ]Customer
-- [ ]Seller
+  - [ ]Customer
+  - [ ]Seller
 
 ## Second Phase
 
