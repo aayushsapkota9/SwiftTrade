@@ -1,0 +1,4 @@
+{
+    "MONGODB_DATABASE_NAME":"swift_trade",
+    "MONGODB_CONNECTION_URL":"mongodb://localhost:27017"
+}
