@@ -3,32 +3,16 @@ require('dotenv').config()
 const connection = require('./db/connection')
 connection()
 const app = express()
-const Products = require('./models/product')
+const Users = require('./models/users')
 app.use(express.json())
 
-
-app.post('/products', (req, res) => {
-    Products.create(req.body)
+app.post('/register', async (req, res) => {
+    await Users.create(req.body)
     res.json({
-        msg: "products"
+        msg: "You are successfully registered"
     })
 })
 
-app.get('/products', async (req, res) => {
-    const data = await Products.find()
-})
-
-app.put('/products/:id', async (req, res) => {
-    await Products.findByIdAndUpdate(req.params.id, req.body)
-})
-
-app.delete('/products/:id', async (req, res) => {
-    await Products.findByIdAndDelete(req.params.id)
-})
-
-app.get('/products', async (req, res) => {
-    const data = await Products.find()
-})
-app.listen(process.env.POST, () => {
-    console.log(`Example app listening on ${process.env.PORT}}`)
+app.listen(process.env.PORT, () => {
+    console.log(`Example app listening on ${process.env.PORT}`)
 })
