@@ -2,6 +2,7 @@ import React from 'react';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import { Input } from 'postcss';
+import Link from 'next/link'
 
 const LoginSchema = Yup.object().shape({
     password: Yup.string()
@@ -12,6 +13,7 @@ const LoginSchema = Yup.object().shape({
 });
 
 export const Login = () => (
+
     <div >
         <h1>Login</h1>
         <Formik
@@ -26,23 +28,27 @@ export const Login = () => (
             }}
         >
             {({ errors, touched }) => (
-                <Form>
-                    <div>
-                        <label>Email: </label>
-                        <Field name="email" type="email" placeholder="john.doe@gmail.com" />
+
+                <Form className='flex flex-col gap-3'>
+                    <div className='p-3'>
+                        <label for="email">Email: </label>
+                        <Field name="email" id="email" type="email" placeholder="john.doe@gmail.com" className="border-black	border-2 rounded-md" />
                         {errors.email && touched.email ? <div>{errors.email}</div> : null}
                     </div>
                     <div>
-                        <label>Password: </label>
-                        <Field name="password" placeholder="Password" />
+                        <label for="password">Password: </label>
+                        <Field name="password" id="password" placeholder="Password" className="border-black	border-2 rounded-md" />
                         {errors.password && touched.password ? (
                             <div>{errors.password}</div>
                         ) : null}
                     </div>
-                    <button type="submit">Login</button>
+                    <div><button type="submit" className="">Login</button></div>
+
                 </Form>
             )}
         </Formik>
+        <p>Don't have an account?<Link href="http://localhost:3000/register"> Register</Link></p>
+
     </div>
 );
 export default Login;
