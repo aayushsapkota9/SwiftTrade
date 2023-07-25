@@ -4,7 +4,7 @@
 
 - [ ] Login
 
-- [ ] Register
+- [x] Register
 
   - [ ] Customer
   - [ ] Seller
@@ -24,6 +24,6 @@
 
 ## Flowchart
 
-![First Phase rought outline](./flow-chart.png)
+![First Phase rough outline](./flow-chart.png)
 Text in black indicates first phase
 Text in green indicates second phase
