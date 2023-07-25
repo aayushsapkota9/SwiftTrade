@@ -1,17 +1,14 @@
 const express = require('express')
 require('dotenv').config()
+const app = express()
 const connection = require('./db/connection')
 connection()
-const app = express()
-const Users = require('./models/users')
+const userRoute = require("./routes/users")
 app.use(express.json())
+const cors = require('cors')
+app.use(cors())
 
-app.post('/register', async (req, res) => {
-    await Users.create(req.body)
-    res.json({
-        msg: "You are successfully registered"
-    })
-})
+app.use("/", userRoute);
 
 app.listen(process.env.PORT, () => {
     console.log(`Example app listening on ${process.env.PORT}`)
