@@ -1,8 +1,11 @@
+import { BlackLogo } from '@/components/logo'
+import Sidebar from '@/components/sidebar'
 import React from 'react'
 function Dashboard() {
     return (
         <div>
-            <div></div>
+            <BlackLogo></BlackLogo>
+            <Sidebar ></Sidebar>
         </div>
     )
 }
