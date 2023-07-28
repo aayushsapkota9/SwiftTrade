@@ -20,6 +20,7 @@ function getItem(label, key, icon, children, type) {
     };
 }
 const items = [
+    // getItem('', '1', <PieChartOutlined />),
     getItem('Option 1', '1', <PieChartOutlined />),
     getItem('Option 2', '2', <DesktopOutlined />),
     getItem('Option 3', '3', <ContainerOutlined />),
@@ -42,6 +43,7 @@ const Sidebar = () => {
     };
     return (
         <div
+            // className='border-2 border-black'
             style={{
                 width: 256,
                 fontSize: 5,
@@ -53,11 +55,12 @@ const Sidebar = () => {
                 onClick={toggleCollapsed}
                 style={{
                     marginBottom: 16,
+                    color: 'black',
                 }}
             >
                 {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
             </Button>
-            <Menu
+            <Menu className='bg-gray-200'
                 defaultSelectedKeys={['1']}
                 defaultOpenKeys={['sub1']}
                 mode="inline"

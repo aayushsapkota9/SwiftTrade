@@ -5,12 +5,12 @@ const BlackLogo = () => {
         <div>
             <Link href="/">
                 <div className="hover:cursor-pointer">
-                    <img
-                        src="/client/public/swift-logo-black.png"
+                    <Image
+                        src="/swift-logo-black.png"
                         width={200}
                         height={200}
                         alt="Logo"
-                    ></img>
+                    ></Image>
                 </div>
             </Link>
         </div>
@@ -22,7 +22,7 @@ const WhiteLogo = () => {
             <Link href="/">
                 <div className="hover:cursor-pointer relative bottom-10">
                     <Image
-                        src="/client/public/swift-logo-white.png"
+                        src="/swift-logo-white.png"
                         width={100}
                         height={100}
                         alt="Logo"
@@ -32,6 +32,4 @@ const WhiteLogo = () => {
         </div>
     )
 }
-
-export { BlackLogo, WhiteLogo };
-
+module.exports = { BlackLogo, WhiteLogo }

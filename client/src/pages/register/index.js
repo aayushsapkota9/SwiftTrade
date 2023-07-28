@@ -31,21 +31,24 @@ const SignupSchema = Yup.object().shape({
 export const Register = () => {
     const [messageApi, contextHolder] = message.useMessage();
     const handleRegister = async (values) => {
+        try {
+            const { confirmPassword, ...userDetails } = values;
+            const res = await fetch('http://localhost:4000/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(userDetails)
+            });
+            const data = await res.json();
+            console.log(data)
+            console.log(res.status)
+            if (data && res.status == 200) {
+                // router.push('/')
+                messageApi.info(data.msg);
+            } else {
+                messageApi.info(res.statusText);
+            }
+        } catch (error) {
 
-        const { confirmPassword, ...userDetails } = values;
-        const res = await fetch('http://localhost:4000/register', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(userDetails)
-        });
-        const data = await res.json();
-        console.log(data)
-        console.log(res.status)
-        if (data && res.status == 200) {
-            // router.push('/')
-            messageApi.info(data.msg);
-        } else {
-            messageApi.info(res.statusText);
         }
 
     }
