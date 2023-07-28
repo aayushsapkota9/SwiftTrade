@@ -9,7 +9,7 @@ const BlackLogo = () => {
                         src="/swift-logo-black.png"
                         width={200}
                         height={200}
-                        alt="Logo"
+                        alt="Logo in Black theme"
                     ></Image>
                 </div>
             </Link>
@@ -25,7 +25,7 @@ const WhiteLogo = () => {
                         src="/swift-logo-white.png"
                         width={100}
                         height={100}
-                        alt="Logo"
+                        alt="Logo in White theme"
                     ></Image>
                 </div>
             </Link>
