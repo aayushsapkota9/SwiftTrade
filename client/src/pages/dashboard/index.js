@@ -7,12 +7,21 @@ import Billing from '@/components/billing';
 import DashboardCard from '@/components/dashboard';
 import Customers_Vendors from '@/components/customers_vendors';
 import Inventory from '@/components/inventory';
+import Bank_Cash from '@/components/bank_cash';
+import ManageStore from '@/components/managestore';
+import Reports from '@/components/reports';
 import {
     MenuFoldOutlined,
     MenuUnfoldOutlined,
     UploadOutlined,
-    UserOutlined,
-    VideoCameraOutlined,
+    ShoppingCartOutlined,
+    HomeOutlined,
+    ShopOutlined,
+    TransactionOutlined,
+    TeamOutlined,
+    SwitcherOutlined,
+    PieChartOutlined
+
 } from '@ant-design/icons';
 
 
@@ -46,23 +55,40 @@ const Dashboard = () => {
                     items={[
                         {
                             key: 1,
-                            icon: <UserOutlined />,
+                            icon: <HomeOutlined />,
                             label: 'Dashboard'
                         },
                         {
                             key: 2,
-                            icon: <VideoCameraOutlined />,
+                            icon: <ShoppingCartOutlined />,
                             label: 'Sales & Billing',
                         },
                         {
                             key: 3,
-                            icon: <UploadOutlined />,
+                            icon: <ShopOutlined />,
                             label: 'Inventory',
                         },
                         {
                             key: 4,
-                            icon: <UploadOutlined />,
+                            icon: <TransactionOutlined />,
+                            label: 'Banking',
+                        },
+                        {
+                            key: 5,
+                            icon: <TeamOutlined />,
                             label: 'Customers & Vendors',
+                        },
+                        {
+                            key: 6,
+                            icon: <PieChartOutlined />,
+                            label: 'Reports',
+
+                        },
+                        {
+                            key: 7,
+                            icon: <SwitcherOutlined />,
+                            label: 'Manage Stores',
+
                         },
                     ]}
                 >
@@ -101,6 +127,9 @@ const Dashboard = () => {
                     {tabId == 2 ? <Billing /> : null}
                     {tabId == 3 ? <Inventory /> : null}
                     {tabId == 4 ? <Customers_Vendors /> : null}
+                    {tabId == 5 ? <Bank_Cash /> : null}
+                    {tabId == 6 ? <Reports /> : null}
+                    {tabId == 7 ? <ManageStore /> : null}
                 </Content>
             </Layout>
         </Layout>

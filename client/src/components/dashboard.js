@@ -2,7 +2,11 @@ import React from 'react'
 
 function DashboardCard() {
     return (
-        <div>Dashboard Card</div>
+        <div>
+            <div >
+                Dashboard Card
+            </div>
+        </div>
     )
 }
 
