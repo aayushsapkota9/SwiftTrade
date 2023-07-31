@@ -5,7 +5,9 @@ import Link from 'next/link'
 import Image from 'next/image';
 import SignupImage from "../../../public/Signup.png"
 import BlackLogo from "../../../public/swift-logo-black.png"
-import { Button, message } from 'antd';
+import { message } from 'antd';
+import { setUserDetails } from '@/redux/reducerSlice/userSlice';
+import { useDispatch } from 'react-redux';
 
 const SignupSchema = Yup.object().shape({
 
@@ -29,6 +31,7 @@ const SignupSchema = Yup.object().shape({
 
 
 export const Register = () => {
+    const dispatch = useDispatch();
     const [messageApi, contextHolder] = message.useMessage();
     const handleRegister = async (values) => {
         try {
@@ -39,10 +42,11 @@ export const Register = () => {
                 body: JSON.stringify(userDetails)
             });
             const data = await res.json();
-            console.log(data)
-            console.log(res.status)
+
             if (data && res.status == 200) {
                 // router.push('/')
+                debugger;
+                dispatch(setUserDetails(data))
                 messageApi.info(data.msg);
             } else {
                 messageApi.info(res.statusText);
@@ -133,6 +137,7 @@ export const Register = () => {
                 <Image className='h-1/2 w-auto mt-24'
                     src={SignupImage}
                     alt="A person Signing Up "
+                    priority={false}
                 />
 
             </div>

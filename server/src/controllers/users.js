@@ -22,6 +22,7 @@ const registerUser = async (req, res) => {
             res.json({
                 msg: "you are successfully registered",
                 success: true,
+                token,
                 userDetails: otherUsersFields
             })
         }
