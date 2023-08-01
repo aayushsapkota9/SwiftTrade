@@ -9,12 +9,13 @@ import {
     MenuFoldOutlined,
     MenuUnfoldOutlined,
     LogoutOutlined,
-    ShoppingCartOutlined,
+    SecurityScanOutlined,
     HomeOutlined,
     ShopOutlined,
     DownOutlined,
     SettingOutlined,
-    UserOutlined
+    UserOutlined,
+    RollbackOutlined
 
 } from '@ant-design/icons';
 const SignupSchema = Yup.object().shape({
@@ -27,10 +28,22 @@ const SignupSchema = Yup.object().shape({
         .max(50, 'Too Long!')
         .required('Required'),
     email: Yup.string().email('Invalid email').required('Required'),
+    password: Yup.string()
+        .min(5, 'Password Too Short!')
+        .required('Required'),
+    newPassword: Yup.string()
+        .min(5, 'Password Too Short!')
+        .required('Required'),
+    confirmNewPassword: Yup.string()
+        .min(5, 'Password Too Short!')
+        .required('Required')
+        .oneOf([Yup.ref('newPassword'), null], 'Passwords must match'),
 });
 const EditProfile = () => {
     return <div className='ml-64 flex flex-col gap-12'>
-        <div className='text-5xl'>Edit Profile</div>
+        <div className='relative right-8'> <Link href="/dashboard">
+            <RollbackOutlined className='text-3xl relative right-8 bottom-3 text-gray-600 hover:cursor-pointer' />
+        </Link><p className='text-5xl inline'>Edit Profile</p></div>
         <div><Image
             borderRadius='full'
             boxSize='150px'
@@ -45,7 +58,6 @@ const EditProfile = () => {
                 address: '',
                 city: '',
                 state: '',
-                zip: '',
                 country: '',
 
             }}
@@ -82,19 +94,23 @@ const EditProfile = () => {
                         ) : null}</div>
                     <div className='flex gap-10'>
                         <div className=''><label className=' text-lg block'>City: </label>
-                            <Field name="fullName" placeholder="New York" className="border-gray-400 	border-2 rounded-sm p-1 w-64" />
-                            {errors.fullName && touched.fullName ? (
-                                <div>{errors.fullName}</div>
+                            <Field name="city" placeholder="New York" className="border-gray-400 	border-2 rounded-sm p-1 w-64" />
+                            {errors.city && touched.fullName ? (
+                                <div>{errors.city}</div>
                             ) : null}</div>
                         <div className=''><label className=' text-lg block'>State: </label>
 
-                            <Field name="companyName" placeholder="Ohio" className="border-gray-400 border-2 rounded-sm p-1 w-72" />
-                            {errors.companyName && touched.companyName ? (
-                                <div>{errors.companyName}</div>
+                            <Field name="state" placeholder="Ohio" className="border-gray-400 border-2 rounded-sm p-1 w-72" />
+                            {errors.state && touched.state ? (
+                                <div>{errors.state}</div>
                             ) : null}</div>
                     </div>
-
-                    <div className='flex justify-between'><button type="submit" className="bg-black text-white px-7 rounded py-2">Change</button>
+                    <div>
+                        <label className='text-lg block'>Country: </label>
+                        <Field name="country" type="country" placeholder="USA" className="border-gray-400 	border-2 rounded-sm p-1 w-96 " />
+                        {errors.country && touched.country ? <div>{errors.country}</div> : null}
+                    </div>
+                    <div className='flex justify-between'><button type="submit" className="bg-black text-white px-7 rounded py-2">Change Details</button>
                     </div>
                 </Form>
             )}
@@ -103,8 +119,48 @@ const EditProfile = () => {
     </div>
 }
 const Security = () => {
-    return <div>
-        <div>Edit Password</div>
+    return <div className='ml-64 flex flex-col gap-12'>
+        <div className='relative right-8'> <Link href="/dashboard">
+            <RollbackOutlined className='text-3xl relative right-8 bottom-3 text-gray-600 hover:cursor-pointer' />
+        </Link><p className='text-5xl inline'>Change Password</p></div>
+
+        <div>     <Formik
+            initialValues={{
+                password: '',
+                newPassword: '',
+                confirmNewPassword: '',
+
+
+            }}
+            validationSchema={SignupSchema}
+            onSubmit={values => {
+                // same shape as initial values
+                console.log(values);
+            }}
+        >
+            {({ errors, touched }) => (
+                <Form className='flex flex-col gap-5'>
+
+                    <div>
+                        <label className='text-lg block'>Current Password: </label>
+                        <Field name="password" type="password" placeholder="current password" className="border-gray-400 	border-2 rounded-sm p-1 w-96 " />
+                        {errors.password && touched.password ? <div>{errors.password}</div> : null}
+                    </div>
+                    <div><label className=' text-lg block'>New Password </label>
+                        <Field name="newPassword" placeholder="new password" className="border-gray-400 	border-2 rounded-sm p-1 w-96" />
+                        {errors.newPassword && touched.newPassword ? (
+                            <div>{errors.newPassword}</div>
+                        ) : null}</div>
+                    <div>
+                        <label className='text-lg block'>Confirm New Password: </label>
+                        <Field name="confirmNewPassword" type="confirmNewPassword" placeholder="confirm new password" className="border-gray-400 	border-2 rounded-sm p-1 w-96 " />
+                        {errors.confirmNewPassword && touched.confirmNewPassword ? <div>{errors.confirmNewPassword}</div> : null}
+                    </div>
+                    <div className='flex justify-between'><button type="submit" className="bg-black text-white px-7 rounded py-2">Change Password</button>
+                    </div>
+                </Form>
+            )}
+        </Formik></div>
 
     </div>
 }
@@ -158,12 +214,12 @@ const Dashboard = () => {
                     items={[
                         {
                             key: 1,
-                            icon: <HomeOutlined />,
+                            icon: <UserOutlined />,
                             label: 'Edit Profile'
                         },
                         {
                             key: 2,
-                            icon: <ShoppingCartOutlined />,
+                            icon: <SecurityScanOutlined />,
                             label: 'Security',
                         },
                         {
@@ -173,7 +229,7 @@ const Dashboard = () => {
                         },
                         {
                             key: 4,
-                            icon: <ShopOutlined />,
+                            icon: <RollbackOutlined />,
                             label: <Link href="/dashboard">Go to Dashboard</Link>,
                         },
 
@@ -209,7 +265,7 @@ const Dashboard = () => {
                     >
                         <Link href="#" onClick={(e) => e.preventDefault()}>
                             <Space className='w-36 mr-12'>
-                                <div className='relative left-32'><Avatar src="https://xsgames.co/randomusers/avatar.php?g=pixel&key=1" /> <DownOutlined /></div>
+                                <div className='relative left-32'><Avatar src="https://bit.ly/dan-abramov" /> <DownOutlined /></div>
 
                             </Space>
                         </Link>

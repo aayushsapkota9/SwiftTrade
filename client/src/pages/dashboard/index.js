@@ -144,7 +144,7 @@ const Dashboard = () => {
                     >
                         <Link href="#" onClick={(e) => e.preventDefault()}>
                             <Space className='w-36 mr-12'>
-                                <div className='relative left-32'><Avatar src="https://xsgames.co/randomusers/avatar.php?g=pixel&key=1" /> <DownOutlined /></div>
+                                <div className='relative left-32'><Avatar src="https://bit.ly/dan-abramov" /> <DownOutlined /></div>
 
                             </Space>
                         </Link>
