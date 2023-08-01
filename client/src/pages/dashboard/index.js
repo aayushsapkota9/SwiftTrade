@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { WhiteLogo } from '../../components/logo'
 import Link from 'next/link';
-import { Layout, Menu, Button, theme, Avatar } from 'antd';
+import { Layout, Menu, Button, theme, Avatar, Dropdown, Space } from 'antd';
 
 import Billing from '@/components/billing';
 import DashboardCard from '@/components/dashboard';
@@ -13,14 +13,17 @@ import Reports from '@/components/reports';
 import {
     MenuFoldOutlined,
     MenuUnfoldOutlined,
-    UploadOutlined,
+    LogoutOutlined,
     ShoppingCartOutlined,
     HomeOutlined,
     ShopOutlined,
     TransactionOutlined,
     TeamOutlined,
     SwitcherOutlined,
-    PieChartOutlined
+    PieChartOutlined,
+    DownOutlined,
+    SettingOutlined,
+    UserOutlined
 
 } from '@ant-design/icons';
 
@@ -36,18 +39,37 @@ const Dashboard = () => {
     } = theme.useToken();
 
     const onChange = (key) => {
-        console.log(key.key)
         setTabId(key.key);
     }
+    const items = [
+        {
+            label: <Link href="/profile">Profile</Link>,
+            icon: <UserOutlined />,
+            key: '0',
+        },
+        {
+            label: <Link href="#">Setting</Link>,
+            icon: <SettingOutlined />,
+            key: '1',
+        },
+        {
+            type: 'divider',
+        },
+        {
+            label: 'Logout',
+            icon: <LogoutOutlined />,
+            key: '3',
+        },
+    ];
     return (
         <Layout>
-            <Sider trigger={null} collapsible collapsed={collapsed} >
+            <Sider trigger={null} collapsible collapsed={collapsed} className='h-screen'>
                 <div className="demo-logo-vertical" />
                 <div className='mt-10 w-16 ml-1'>
                     <WhiteLogo ></WhiteLogo>
                 </div>
                 <Menu
-                    className='h-screen'
+
                     theme="dark"
                     mode="inline"
                     defaultSelectedKeys={['1']}
@@ -93,6 +115,7 @@ const Dashboard = () => {
                     ]}
                 >
                 </Menu>
+
             </Sider>
             <Layout>
                 <Header
@@ -111,8 +134,21 @@ const Dashboard = () => {
                             height: 64,
                         }}
                     />
-                    <div className='inline float-right mr-10'><Avatar src="https://xsgames.co/randomusers/avatar.php?g=pixel&key=1" /></div>
 
+                    <Dropdown className='inline float-right mr-4 '
+                        menu={{
+                            items,
+                        }}
+                        size="large"
+                        trigger={['click']}
+                    >
+                        <Link href="#" onClick={(e) => e.preventDefault()}>
+                            <Space className='w-36 mr-12'>
+                                <div className='relative left-32'><Avatar src="https://xsgames.co/randomusers/avatar.php?g=pixel&key=1" /> <DownOutlined /></div>
+
+                            </Space>
+                        </Link>
+                    </Dropdown>
                 </Header>
                 <Content
                     style={{
@@ -132,7 +168,7 @@ const Dashboard = () => {
                     {tabId == 7 ? <ManageStore /> : null}
                 </Content>
             </Layout>
-        </Layout>
+        </Layout >
     );
 };
 export default Dashboard;
