@@ -2,7 +2,7 @@
 
 ## First Phase
 
-- [ ] Login
+- [x] Login -[ ] Login Second Phase
 
 - [x] Register
 
@@ -51,7 +51,7 @@ _Below is an example of how you can instruct your audience on installing and set
     npm run dev
    ```
 
-4. Install NPM packages (server)
+4. Install NPM packages (client)
    ```
    ls
    cd client
