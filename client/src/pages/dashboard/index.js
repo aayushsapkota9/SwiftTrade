@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux'
 import { WhiteLogo } from '../../components/logo'
 import Link from 'next/link';
 import { Layout, Menu, Button, theme, Avatar, Dropdown, Space } from 'antd';
-
 import Billing from '@/components/billing';
 import DashboardCard from '@/components/dashboard';
 import Customers_Vendors from '@/components/customers_vendors';
@@ -10,6 +10,7 @@ import Inventory from '@/components/inventory';
 import Bank_Cash from '@/components/bank_cash';
 import ManageStore from '@/components/managestore';
 import Reports from '@/components/reports';
+import router from 'next/router';
 import {
     MenuFoldOutlined,
     MenuUnfoldOutlined,
@@ -26,11 +27,8 @@ import {
     UserOutlined
 
 } from '@ant-design/icons';
-
-
-
-
 const Dashboard = () => {
+    const { isLoggedIn, userDetails } = useSelector(state => state.users)
     const { Header, Sider, Content } = Layout;
     const [tabId, setTabId] = useState(1)
     const [collapsed, setCollapsed] = useState(false);
@@ -40,6 +38,9 @@ const Dashboard = () => {
 
     const onChange = (key) => {
         setTabId(key.key);
+    }
+    const handleLogout = () => {
+        router.push("/login")
     }
     const items = [
         {
@@ -56,8 +57,8 @@ const Dashboard = () => {
             type: 'divider',
         },
         {
-            label: 'Logout',
-            icon: <LogoutOutlined />,
+            label: <div onClick={handleLogout}>Logout</div>,
+            icon: <LogoutOutlined onClick={handleLogout} />,
             key: '3',
         },
     ];
@@ -135,17 +136,16 @@ const Dashboard = () => {
                         }}
                     />
 
-                    <Dropdown className='inline float-right mr-4 '
+                    <Dropdown className='inline float-right  '
                         menu={{
                             items,
                         }}
-                        size="large"
                         trigger={['click']}
                     >
                         <Link href="#" onClick={(e) => e.preventDefault()}>
-                            <Space className='w-36 mr-12'>
-                                <div className='relative left-32'><Avatar src="https://bit.ly/dan-abramov" /> <DownOutlined /></div>
-
+                            <Space className='mr-8 '>
+                                <div className=''><Avatar src="https://bit.ly/dan-abramov" /> <DownOutlined /></div>
+                                <p className='text-md'>{userDetails?.fullName?.split(" ")[0]}</p>
                             </Space>
                         </Link>
                     </Dropdown>

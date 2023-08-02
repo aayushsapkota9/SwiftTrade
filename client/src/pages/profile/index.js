@@ -5,6 +5,9 @@ import { Layout, Menu, Button, theme, Avatar, Dropdown, Space } from 'antd';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import { Image } from '@chakra-ui/react'
+import router from 'next/router';
+
+import { useSelector } from 'react-redux'
 import {
     MenuFoldOutlined,
     MenuUnfoldOutlined,
@@ -40,6 +43,7 @@ const SignupSchema = Yup.object().shape({
         .oneOf([Yup.ref('newPassword'), null], 'Passwords must match'),
 });
 const EditProfile = () => {
+    const { isLoggedIn, userDetails } = useSelector(state => state.users)
     return <div className='ml-64 flex flex-col gap-12'>
         <div className='relative right-8'> <Link href="/dashboard">
             <RollbackOutlined className='text-3xl relative right-8 bottom-3 text-gray-600 hover:cursor-pointer' />
@@ -71,20 +75,20 @@ const EditProfile = () => {
                 <Form className='flex flex-col gap-5'>
                     <div className='flex gap-10'>
                         <div className=''><label className=' text-lg block'>Full Name: </label>
-                            <Field name="fullName" placeholder="John Doe" className="border-gray-400 	border-2 rounded-sm p-1 w-64" />
+                            <Field name="fullName" value={userDetails?.fullName} placeholder="John Doe" className="border-gray-400 	border-2 rounded-sm p-1 w-64" />
                             {errors.fullName && touched.fullName ? (
                                 <div>{errors.fullName}</div>
                             ) : null}</div>
                         <div className=''><label className=' text-lg block'>Company Name: </label>
 
-                            <Field name="companyName" placeholder="XYZ PVT LTD" className="border-gray-400 	border-2 rounded-sm p-1 w-72" />
+                            <Field name="companyName" value={userDetails?.companyName} placeholder="XYZ PVT LTD" className="border-gray-400 	border-2 rounded-sm p-1 w-72" />
                             {errors.companyName && touched.companyName ? (
                                 <div>{errors.companyName}</div>
                             ) : null}</div>
                     </div>
                     <div>
                         <label className='text-lg block'>Email: </label>
-                        <Field name="email" type="email" placeholder="john.doe@gmail.com" className="border-gray-400 	border-2 rounded-sm p-1 w-96 " />
+                        <Field name="email" type="email" value={userDetails?.email} placeholder="john.doe@gmail.com" className="border-gray-400 	border-2 rounded-sm p-1 w-96 " />
                         {errors.email && touched.email ? <div>{errors.email}</div> : null}
                     </div>
                     <div><label className=' text-lg block'>Address </label>
@@ -178,6 +182,9 @@ const Dashboard = () => {
     const onChange = (key) => {
         setTabId(key.key);
     }
+    const handleLogout = () => {
+        router.push("/login")
+    }
     const items = [
         {
             label: <Link href="/dashboard">Dashboard</Link>,
@@ -193,8 +200,8 @@ const Dashboard = () => {
             type: 'divider',
         },
         {
-            label: 'Logout',
-            icon: <LogoutOutlined />,
+            label: <div onClick={handleLogout}>Logout</div>,
+            icon: <LogoutOutlined onClick={handleLogout} />,
             key: '3',
         },
     ];

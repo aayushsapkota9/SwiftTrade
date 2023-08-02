@@ -12,7 +12,6 @@ const userSlice = createSlice({
     initialState,
     reducers: {
         setUserDetails(state, actions) {
-            debugger
             const { token, userDetails } = actions.payload;
             return {
                 ...state,

@@ -8,6 +8,7 @@ import BlackLogo from "../../../public/swift-logo-black.png"
 import { message } from 'antd';
 import { setUserDetails } from '@/redux/reducerSlice/userSlice';
 import { useDispatch } from 'react-redux';
+import router from 'next/router';
 
 const SignupSchema = Yup.object().shape({
 
@@ -44,10 +45,10 @@ export const Register = () => {
             const data = await res.json();
 
             if (data && res.status == 200) {
-                // router.push('/')
-                debugger;
+
                 dispatch(setUserDetails(data))
                 messageApi.info(data.msg);
+                router.push('/dashboard')
             } else {
                 messageApi.info(res.statusText);
             }

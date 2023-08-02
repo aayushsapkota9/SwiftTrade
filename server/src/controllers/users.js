@@ -10,16 +10,16 @@ const registerUser = async (req, res) => {
         if (data) {
             res.status(409).json({
                 msg: "Phone Number already exists",
-                success: false
+                success: false,
             })
         } else {
             req.body.password = await bcrypt.hash(req.body.password, saltRounds)
-            var token = jwt.sign({ foo: 'bar' }, process.env.SECRET_KEY
+            const token = jwt.sign({ foo: 'bar' }, process.env.SECRET_KEY
             );
 
             const data = await Users.create(req.body);
             const { password, ...otherUsersFields } = data._doc;
-            res.json({
+            res.status(200).json({
                 msg: "you are successfully registered",
                 success: true,
                 token,
@@ -32,4 +32,35 @@ const registerUser = async (req, res) => {
     }
 
 }
-module.exports = { registerUser };
+const login = async (req, res) => {
+    try {
+        const data = await Users.findOne({ email: req.body.email })
+        if (data) {
+            const isMatched = await bcrypt.compare(req.body.password, data.password)
+            if (isMatched) {
+                const token = jwt.sign({ email: req.body.email }, process.env.SECRET_KEY);
+                const { password, ...otherFields } = data._doc
+                res.json({
+                    msg: "Login Successful",
+                    token: token,
+                    success: true,
+                    userDetails: otherFields
+                })
+            } else {
+                res.json({
+                    success: false,
+                    msg: "Password didn't matched"
+                })
+            }
+        } else {
+            res.json({
+                success: false,
+                msg: "Email doesn't exist"
+            })
+        }
+    } catch (err) {
+        console.log(err)
+    }
+
+}
+module.exports = { registerUser, login };
