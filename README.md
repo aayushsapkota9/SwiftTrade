@@ -29,15 +29,17 @@ _Below is an example of how you can instruct your audience on installing and set
 1. Create .env file in server root (check .env.sample for reference)
 
 2. Clone the repo
+   USE HTTP
 
    ```sh
    git clone https://github.com/aayushsapkota9/SwiftTrade.git
    ```
 
    OR
+   USE SSH
 
    ```sh
-   git@github.com:aayushsapkota9/SwiftTrade.git
+   git clonegit@github.com:aayushsapkota9/SwiftTrade.git
    ```
 
 3. Install NPM packages (server)
