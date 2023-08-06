@@ -1,32 +1,40 @@
 import React, { useState } from 'react';
-import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
-import { Button, Modal } from 'antd';
+import { Button, Modal, message } from 'antd';
+import CustomFrom from './custom_form';
+import { data } from 'autoprefixer';
 
-
+// http://localhost:4000/inventory/items
 const Inventory = () => {
-    const SignupSchema = Yup.object().shape({
-        name: Yup.string()
-            .min(2, 'Too Short!')
-            .max(50, 'Too Long!')
-            .required('Required'),
-        category: Yup.string()
-            .min(2, 'Too Short!')
-            .max(50, 'Too Long!')
-            .required('Required'),
-        purchasePrice: Yup.number().required('Required'),
-        sellingPrice: Yup.number().required('Required'),
-    });
+
     const [isModalOpen, setIsModalOpen] = useState(false);
     const showModal = () => {
         setIsModalOpen(true);
     };
-    const handleOk = () => {
+    const onSubmit = async (values) => {
         setIsModalOpen(false);
+        try {
+            const res = await fetch('http://localhost:4000/inventory/items', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(values)
+            });
+            const data = await res.json();
+
+            if (data && res.status == 200) {
+                messageApi.info(data.msg);
+                router.push('/dashboard')
+            } else {
+                messageApi.info(data.msg);
+            }
+        } catch (error) {
+
+        }
     };
     const handleCancel = () => {
         setIsModalOpen(false);
     };
+    const [messageApi, contextHolder] = message.useMessage();
 
     return <div>
         <div className='flex justify-between mb-10 mt-2'>
@@ -37,42 +45,62 @@ const Inventory = () => {
                 </Button>
                 <Modal title="Basic Modal" open={isModalOpen} footer={null} onCancel={handleCancel}>
                     <div>
-                        <h1>Signup</h1>
-                        <Formik
+                        {contextHolder}
+                        <CustomFrom schema={{
+                            name: Yup.string()
+                                .min(2, 'Too Short!')
+                                .max(50, 'Too Long!')
+                                .required('Required'),
+                            category: Yup.string()
+                                .min(2, 'Too Short!')
+                                .max(50, 'Too Long!')
+                                .required('Required'),
+                            purchasePrice: Yup.number().required('Required'),
+                            sellingPrice: Yup.number().required('Required'),
+                        }} parentClass={" flex flex-col gap-5"}
+                            submitClass={"bg-gray-800 rounded-md text-white px-5 py-2 w-20 "}
+                            errorClass={'flex gap-3'}
                             initialValues={{
                                 name: '',
                                 category: '',
                                 sellingPrice: '',
                                 purchasePrice: '',
                             }}
-                            validationSchema={SignupSchema}
-                            onSubmit={values => {
-                                // same shape as initial values
-                                console.log(values);
-                            }}
-                        >
-                            {({ errors, touched }) => (
-                                <Form className='flex flex-col gap-5'>
-                                    <div>Name:<Field name="name" className="border-black border-2" />
-                                        {errors.name && touched.name ? (
-                                            <div>{errors.name}</div>
-                                        ) : null}</div>
-                                    <div>Category<Field name="category" className="border-black border-2" />
-                                        {errors.category && touched.category ? (
-                                            <div>{errors.category}</div>
-                                        ) : null}</div>
-                                    <div>Selling Price<Field name="purchasePrice" className="border-black border-2" />
-                                        {errors.purchasePrice && touched.purchasePrice ? (
-                                            <div>{errors.purchasePrice}</div>
-                                        ) : null}</div>
-                                    <div>Selling Price<Field name="sellingPrice" className="border-black border-2" />
-                                        {errors.sellingPrice && touched.sellingPrice ? (
-                                            <div>{errors.sellingPrice}</div>
-                                        ) : null}</div>
-                                    <button type="submit" className='bg-gray-800 px-5 py-2 text-white'>Submit</button>
-                                </Form>
-                            )}
-                        </Formik>
+                            fields={[{
+                                label: 'Name',
+                                labelClass: '',
+                                name: 'name',
+                                placeholder: `Enter the product's name`,
+                                className: 'border-black border-2',
+
+                            },
+                            {
+                                label: 'Category',
+                                labelClass: '',
+                                name: 'category',
+                                placeholder: `Enter the product's category`,
+                                className: 'border-black border-2',
+
+                            },
+                            {
+                                label: 'Purchase Price',
+                                labelClass: '',
+                                name: 'purchasePrice',
+                                placeholder: `Amount`,
+                                className: 'border-black border-2',
+
+                            },
+                            {
+                                label: 'Selling Price',
+                                labelClass: '',
+                                name: 'sellingPrice',
+                                placeholder: `Amount`,
+                                className: 'border-black border-2',
+
+                            },
+                            ]}
+                            onSubmit={onSubmit}
+                        ></CustomFrom>
                     </div>
                 </Modal>
             </></div>
@@ -80,7 +108,7 @@ const Inventory = () => {
         <hr ></hr>
         <div>
         </div>
-    </div>
+    </div >
 }
 
 
