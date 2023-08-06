@@ -162,8 +162,8 @@ const Dashboard = () => {
                     {tabId == 1 ? <DashboardCard /> : null}
                     {tabId == 2 ? <Billing /> : null}
                     {tabId == 3 ? <Inventory /> : null}
-                    {tabId == 4 ? <Customers_Vendors /> : null}
-                    {tabId == 5 ? <Bank_Cash /> : null}
+                    {tabId == 4 ? <Bank_Cash /> : null}
+                    {tabId == 5 ? <Customers_Vendors /> : null}
                     {tabId == 6 ? <Reports /> : null}
                     {tabId == 7 ? <ManageStore /> : null}
                 </Content>
