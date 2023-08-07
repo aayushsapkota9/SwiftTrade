@@ -1,4 +1,5 @@
-const Inventory = require('../models/inventory')
+const Inventory = require('../models/inventory');
+const multer = require('multer');
 // const registerUser = async (req, res) => {
 //     try {
 //         //check if user already exists
@@ -31,12 +32,34 @@ const addInventory = async (req, res) => {
 
     try {
         const data = await Inventory.create(req.body)
-        res.status(200).json({
-            msg: "Item added to cart",
-            success: true
-        })
+        if (data) {
+            res.status(200).json({
+                msg: "Item added to inventory",
+                success: true
+            })
+        }
+        else {
+            res.json({
+                msg: "Operation failed"
+            })
+        }
     } catch (error) {
         console.log(error)
     }
 }
-module.exports = { addInventory };
+const getAllInventory = async (req, res) => {
+    try {
+        const data = await Inventory.find()
+        if (data) {
+            res.json({
+                data,
+                msg: "Success",
+                success: true
+            })
+        }
+
+    } catch (error) {
+        console.log(error)
+    }
+}
+module.exports = { addInventory, getAllInventory };
