@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 
 
 
 const CustomFrom = (props) => {
+    const [image, setImage] = useState(null);
     const SignupSchema = Yup.object().shape(props.schema);
     console.log(props.fields)
     return < div >
@@ -12,6 +13,7 @@ const CustomFrom = (props) => {
             initialValues={props.initialValues}
             validationSchema={SignupSchema}
             onSubmit={values => {
+                values = { ...values, image }
                 props.onSubmit(values)
             }}
         >
@@ -27,6 +29,10 @@ const CustomFrom = (props) => {
                             ) : null}
                         </div>
                     })}
+                    <div>
+                        {props.imageLabel ? <label>{props.imageLabel} </label> : null}
+                        {props.imageLabel ? <input type='file' name='image' onChange={(e) => setImage(e.target.files[0])} /> : null}
+                    </div>
                     <div className={props.submitClass}><button type="submit" >Submit</button></div>
                 </Form>
             )}

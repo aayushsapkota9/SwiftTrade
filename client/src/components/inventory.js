@@ -2,9 +2,7 @@ import React, { useState } from 'react';
 import * as Yup from 'yup';
 import { Button, Modal, message } from 'antd';
 import CustomFrom from './custom_form';
-import { data } from 'autoprefixer';
 
-// http://localhost:4000/inventory/items
 const Inventory = () => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -12,6 +10,7 @@ const Inventory = () => {
         setIsModalOpen(true);
     };
     const onSubmit = async (values) => {
+        console.log(values)
         setIsModalOpen(false);
         try {
             const res = await fetch('http://localhost:4000/inventory/items', {
@@ -46,18 +45,19 @@ const Inventory = () => {
                 <Modal title="Basic Modal" open={isModalOpen} footer={null} onCancel={handleCancel}>
                     <div>
                         {contextHolder}
-                        <CustomFrom schema={{
-                            name: Yup.string()
-                                .min(2, 'Too Short!')
-                                .max(50, 'Too Long!')
-                                .required('Required'),
-                            category: Yup.string()
-                                .min(2, 'Too Short!')
-                                .max(50, 'Too Long!')
-                                .required('Required'),
-                            purchasePrice: Yup.number().required('Required'),
-                            sellingPrice: Yup.number().required('Required'),
-                        }} parentClass={" flex flex-col gap-5"}
+                        <CustomFrom
+                            schema={{
+                                name: Yup.string()
+                                    .min(2, 'Too Short!')
+                                    .max(50, 'Too Long!')
+                                    .required('Required'),
+                                category: Yup.string()
+                                    .min(2, 'Too Short!')
+                                    .max(50, 'Too Long!')
+                                    .required('Required'),
+                                purchasePrice: Yup.number().required('Required'),
+                                sellingPrice: Yup.number().required('Required'),
+                            }} parentClass={" flex flex-col gap-5"}
                             submitClass={"bg-gray-800 rounded-md text-white px-5 py-2 w-20 "}
                             errorClass={'flex gap-3'}
                             initialValues={{
@@ -65,6 +65,7 @@ const Inventory = () => {
                                 category: '',
                                 sellingPrice: '',
                                 purchasePrice: '',
+                                image: ''
                             }}
                             fields={[{
                                 label: 'Name',
@@ -100,6 +101,7 @@ const Inventory = () => {
                             },
                             ]}
                             onSubmit={onSubmit}
+                            imageLabel={"Upload photo"}
                         ></CustomFrom>
                     </div>
                 </Modal>
