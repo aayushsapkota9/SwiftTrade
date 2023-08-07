@@ -101,7 +101,6 @@ This section should list any major frameworks/libraries used to bootstrap your p
 
 - [![Next][Next.js]][Next-url]
 - [![React][React.js]][React-url]
-- [![Ant Design][Ant-url.js]][Ant-url]
 - ![Node](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
 - ![Express](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)
 - ![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)
@@ -180,7 +179,7 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 
 ## Second Phase
 
-See the [open issues](https://github.com/othneildrew/Best-README-Template/issues) for a full list of proposed features (and known issues).
+See the [open issues](https://github.com/aayushsapkota9/SwiftTrade/issues) for a full list of proposed features (and known issues).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -213,9 +212,9 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 ## Contact
 
-Your Name - [@your_twitter](https://twitter.com/your_username) - email@example.com
+Your Name - [@acro_vision](https://twitter.com/acro_vision) - aayushsapkota9@gmail.com
 
-Project Link: [https://github.com/your_username/repo_name](https://github.com/your_username/repo_name)
+Project Link: [https://github.com/aayushsapkota9/SwiftTrade](https://github.com/aayushsapkota9/SwiftTrade)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -256,9 +255,5 @@ Use this space to list resources you find helpful and would like to give credit 
 [Next-url]: https://nextjs.org/
 [React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
 [React-url]: https://reactjs.org/
-[Ant-url.js]: https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg
-[Ant-url]: https://ant.design/
 [Bootstrap.com]: https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white
 [Bootstrap-url]: https://getbootstrap.com
-
-# SwiftTrade ### Installation _Below is an example of how you can instruct your audience on installing and setting up your app. This template doesn't rely on any external dependencies or services._ 1. Create .env file in server root (check .env.sample for reference) 2. Clone the repo USE HTTP `sh git clone https://github.com/aayushsapkota9/SwiftTrade.git ` OR USE SSH `sh git clonegit@github.com:aayushsapkota9/SwiftTrade.git ` 3. Install NPM packages (server) `ls cd server npm install npm run dev` 4. Install NPM packages (client) `ls cd client npm install npm run dev` <!-- - [ ] --> ## Flowchart ![First Phase rough outline](./flow-chart.png) Text in black indicates first phase Text in green indicates second phase
