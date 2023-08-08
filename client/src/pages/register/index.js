@@ -1,5 +1,5 @@
-import React from 'react';
-import { Formik, Form, Field } from 'formik';
+import React, { useState } from 'react';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import Link from 'next/link'
 import Image from 'next/image';
@@ -9,31 +9,33 @@ import { message } from 'antd';
 import { setUserDetails } from '@/redux/reducerSlice/userSlice';
 import { useDispatch } from 'react-redux';
 import router from 'next/router';
-
-const SignupSchema = Yup.object().shape({
-
-    fullName: Yup.string()
-        .min(1, 'Too Short!')
-        .max(100, 'Too Long!')
-        .required('Required'),
-    companyName: Yup.string()
-        .min(2, 'Too Short!')
-        .max(50, 'Too Long!')
-        .required('Required'),
-    email: Yup.string().email('Invalid email').required('Required'),
-    password: Yup.string()
-        .min(5, 'Password Too Short!')
-        .required('Required'),
-    confirmPassword: Yup.string()
-        .min(5, 'Password Too Short!')
-        .required('Required')
-        .oneOf([Yup.ref('password'), null], 'Passwords must match'),
-});
+import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 
 
 export const Register = () => {
+    const [showPassword, setShowPassword] = useState(false);
     const dispatch = useDispatch();
     const [messageApi, contextHolder] = message.useMessage();
+    const SignupSchema = Yup.object().shape({
+
+        fullName: Yup.string()
+            .min(1, 'Too Short!')
+            .max(100, 'Too Long!')
+            .required('Required'),
+        companyName: Yup.string()
+            .min(2, 'Too Short!')
+            .max(50, 'Too Long!')
+            .required('Required'),
+        email: Yup.string().email('Invalid email').required('Required'),
+        password: Yup.string()
+            .min(8, 'Password must be at least 8 characters long!')
+            .matches(/^(?=.*?[!@#$%^&*])/, 'Password must contain at least one special character!')
+            .required('Required'),
+        confirmPassword: Yup.string()
+            .min(8, 'Password must be at least 8 characters long!')
+            .required('Required')
+            .oneOf([Yup.ref('password'), null], 'Passwords must match'),
+    });
     const handleRegister = async (values) => {
         try {
             const { confirmPassword, ...userDetails } = values;
@@ -50,7 +52,7 @@ export const Register = () => {
                 messageApi.info(data.msg);
                 router.push('/dashboard')
             } else {
-                messageApi.info(res.statusText);
+                messageApi.info(data.msg);
             }
         } catch (error) {
 
@@ -108,20 +110,32 @@ export const Register = () => {
                                     <Field name="email" type="email" placeholder="john.doe@gmail.com" className="border-gray-600 bg-gray-100	border-2 rounded-md p-1 w-96 " />
                                     {errors.email && touched.email ? <div>{errors.email}</div> : null}
                                 </div>
-                                <div>
+                                <div >
                                     <label className='block text-lg'>Password: </label>
-                                    <Field name="password" placeholder="Password" className="border-gray-600 bg-gray-100	border-2 rounded-md p-1 w-96" />
-                                    {errors.password && touched.password ? (
-                                        <div>{errors.password}</div>
-                                    ) : null}
+                                    <Field name="password" type={showPassword ? 'text' : 'password'} placeholder="Password" className="border-gray-600 bg-gray-100	border-2 rounded-md p-1 w-96" />
+                                    <span className='m-5 hover:cursor-pointer'
+                                        onClick={() => setShowPassword(!showPassword)}
+                                    >
+                                        {showPassword ? <EyeInvisibleOutlined /> : <EyeTwoTone />}
+                                    </span>
+                                    <ErrorMessage name="password" component="div" />
                                 </div>
+
                                 <div>
                                     <label className='block text-lg'>Confirm Password: </label>
-                                    <Field name="confirmPassword" placeholder="Confirm Password" className="border-gray-600 bg-gray-100	 border-2 rounded-md p-1 w-96" />
-                                    {errors.confirmPassword && touched.confirmPassword ? (
-                                        <div>{errors.confirmPassword}</div>
-                                    ) : null}
+                                    <Field
+                                        name="confirmPassword"
+                                        type={showPassword ? 'text' : 'password'}
+                                        placeholder="Confirm Password"
+                                        className="border-gray-600 bg-gray-100	border-2 rounded-md p-1 w-96"
+                                    />
+                                    <span className='m-5 hover:cursor-pointer'
+                                        onClick={() => setShowPassword(!showPassword)}
+                                    >
+                                        {showPassword ? <EyeInvisibleOutlined /> : <EyeTwoTone />}
+                                    </span>
                                 </div>
+                                <ErrorMessage name="confirmPassword" component="div" />
                                 <div className='flex justify-between'><button type="submit" className="bg-black text-white px-7 rounded py-2">Register</button>
                                 </div>
 

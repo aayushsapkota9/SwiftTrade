@@ -1,7 +1,6 @@
-import React from 'react';
-import { Formik, Form, Field } from 'formik';
+import React, { useState } from 'react';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-// import { Input } from 'postcss';
 import Link from 'next/link';
 import Image from 'next/image';
 import SecuredImage from "../../../public/LoginSecuredImg.png"
@@ -10,6 +9,7 @@ import { message } from 'antd';
 import { setUserDetails } from '@/redux/reducerSlice/userSlice';
 import { useDispatch } from 'react-redux';
 import router from 'next/router';
+import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 
 
 const LoginSchema = Yup.object().shape({
@@ -22,6 +22,7 @@ const LoginSchema = Yup.object().shape({
 });
 
 export const Login = () => {
+    const [showPassword, setShowPassword] = useState(false);
     const dispatch = useDispatch();
     const [messageApi, contextHolder] = message.useMessage();
     const handleLogin = async (values) => {
@@ -90,12 +91,15 @@ export const Login = () => {
                                     <Field name="email" id="email" type="email" placeholder="john.doe@gmail.com" className="border-gray-600 bg-gray-100	border-2 rounded-md p-1 w-96" />
                                     {errors.email && touched.email ? <div>{errors.email}</div> : null}
                                 </div>
-                                <div>
-                                    <label for="password" className='block text-lg'>Password: </label>
-                                    <Field name="password" id="password" placeholder="Password" className="border-gray-600 bg-gray-100	border-2 rounded-md p-1 w-96" />
-                                    {errors.password && touched.password ? (
-                                        <div>{errors.password}</div>
-                                    ) : null}
+                                <div >
+                                    <label className='block text-lg'>Password: </label>
+                                    <Field name="password" type={showPassword ? 'text' : 'password'} placeholder="Password" className="border-gray-600 bg-gray-100	border-2 rounded-md p-1 w-96" />
+                                    <span className='m-5 hover:cursor-pointer'
+                                        onClick={() => setShowPassword(!showPassword)}
+                                    >
+                                        {showPassword ? <EyeInvisibleOutlined /> : <EyeTwoTone />}
+                                    </span>
+                                    <ErrorMessage name="password" component="div" />
                                 </div>
                                 <div className='flex justify-between'><button type="submit" className="bg-black text-white px-7 rounded py-2">Login</button>
                                     <a href='#' className='text-blue-600 underline'>Forgot password?</a>

@@ -5,8 +5,11 @@ const userSchema = new Schema({
     fullName: String,
     companyName: String,
     email: String,
-    password: String
-    // role: { type: String, default: 'none' }
+    password: String,
+    address: { type: String, default: 'none' },
+    city: { type: String, default: 'none' },
+    state: { type: String, default: 'none' },
+    country: { type: String, default: 'none' },
 });
 
 
