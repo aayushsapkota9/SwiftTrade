@@ -9,7 +9,7 @@ const registerUser = async (req, res) => {
         const data = await Users.findOne({ email: req.body.email })
         if (data) {
             res.status(409).json({
-                msg: "Phone Number already exists",
+                msg: "Email already exists",
                 success: false,
             })
         } else {

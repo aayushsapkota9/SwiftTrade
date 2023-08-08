@@ -5,7 +5,9 @@ const inventorySchema = new Schema({
     name: String,
     category: String,
     purchasePrice: Number,
-    sellingPrice: Number
+    sellingPrice: Number,
+    image: String,
+
 });
 
 
