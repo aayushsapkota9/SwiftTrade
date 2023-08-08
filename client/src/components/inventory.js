@@ -104,6 +104,7 @@ const Inventory = () => {
 
     return <div>
         <div className='flex justify-between mb-10 mt-2'>
+
             <div className='text-4xl'>Items</div>
             <div> <>
                 <Button onClick={showModal}>
