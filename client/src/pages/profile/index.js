@@ -155,7 +155,27 @@ const EditProfile = () => {
     </div >
 }
 const Security = () => {
-    const SignupSchema = Yup.object().shape({
+    const { userDetails, token } = useSelector(state => state.users)
+    const [messageApi, contextHolder] = message.useMessage();
+    const handleChangePassword = async (values) => {
+        const { confirmNewPassword, ...formFields } = values
+        const requestOptions = {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formFields)
+        };
+        const res = await fetch(`http://localhost:4000/change-password/${userDetails._id}`, requestOptions)
+        const data = await res.json();
+        if (data && res.status == 200) {
+
+            messageApi.info(data.msg);
+        } else if (data && res.status == 401) {
+            messageApi.info(data.msg);
+        }
+
+
+    }
+    const ChangePasswordSchema = Yup.object().shape({
         password: Yup.string()
             .min(5, 'Password Too Short!')
             .required('Required'),
@@ -180,28 +200,28 @@ const Security = () => {
 
 
             }}
-            validationSchema={SignupSchema}
+            validationSchema={ChangePasswordSchema}
             onSubmit={values => {
-                // same shape as initial values
-                console.log(values);
+                handleChangePassword(values);
+
             }}
         >
             {({ errors, touched }) => (
                 <Form className='flex flex-col gap-5'>
-
+                    {contextHolder}
                     <div>
                         <label className='text-lg block'>Current Password: </label>
                         <Field name="password" type="password" placeholder="current password" className="border-gray-400 	border-2 rounded-sm p-1 w-96 " />
                         {errors.password && touched.password ? <div>{errors.password}</div> : null}
                     </div>
                     <div><label className=' text-lg block'>New Password </label>
-                        <Field name="newPassword" placeholder="new password" className="border-gray-400 	border-2 rounded-sm p-1 w-96" />
+                        <Field name="newPassword" type="password" placeholder="new password" className="border-gray-400 	border-2 rounded-sm p-1 w-96" />
                         {errors.newPassword && touched.newPassword ? (
                             <div>{errors.newPassword}</div>
                         ) : null}</div>
                     <div>
                         <label className='text-lg block'>Confirm New Password: </label>
-                        <Field name="confirmNewPassword" type="confirmNewPassword" placeholder="confirm new password" className="border-gray-400 	border-2 rounded-sm p-1 w-96 " />
+                        <Field name="confirmNewPassword" type="password" placeholder="confirm new password" className="border-gray-400 	border-2 rounded-sm p-1 w-96 " />
                         {errors.confirmNewPassword && touched.confirmNewPassword ? <div>{errors.confirmNewPassword}</div> : null}
                     </div>
                     <div className='flex justify-between'><button type="submit" className="bg-black text-white px-7 rounded py-2">Change Password</button>

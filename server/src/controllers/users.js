@@ -78,4 +78,32 @@ const updateProfile = async (req, res) => {
     }
 
 }
-module.exports = { registerUser, login, updateProfile };
+const changePassword = async (req, res) => {
+    try {
+        const dbData = await Users.findById(req.params.id)
+
+        if (dbData) {
+            const isMatched = await bcrypt.compare(req.body.password, dbData.password)
+            if (isMatched) {
+                req.body.newPassword = await bcrypt.hash(req.body.newPassword, saltRounds)
+                await Users.findByIdAndUpdate(req.params.id, { password: req.body.newPassword })
+                res.json({
+                    msg: "Password Changed Successfully",
+                    success: true
+                })
+            } else {
+                res.json({
+                    success: false,
+                    msg: "Current Password doesn't match"
+                })
+            }
+        }
+    } catch (err) {
+        console.log(err)
+    }
+
+
+
+
+}
+module.exports = { registerUser, login, updateProfile, changePassword };
