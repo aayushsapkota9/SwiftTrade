@@ -63,4 +63,19 @@ const login = async (req, res) => {
     }
 
 }
-module.exports = { registerUser, login };
+const updateProfile = async (req, res) => {
+    try {
+        await Users.findByIdAndUpdate(req.params.id, { $set: req.body })
+        const data = await Users.findById(req.params.id)
+        if (data) {
+            res.status(200).json({
+                msg: "Changed Successfully",
+                success: true,
+            })
+        }
+    } catch (error) {
+        console.log(error)
+    }
+
+}
+module.exports = { registerUser, login, updateProfile };

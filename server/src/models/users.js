@@ -6,10 +6,10 @@ const userSchema = new Schema({
     companyName: String,
     email: String,
     password: String,
-    address: { type: String, default: 'none' },
-    city: { type: String, default: 'none' },
-    state: { type: String, default: 'none' },
-    country: { type: String, default: 'none' },
+    address: { type: String, default: null },
+    city: { type: String, default: null },
+    state: { type: String, default: null },
+    country: { type: String, default: null },
 });
 
 

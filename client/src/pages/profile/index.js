@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
 import { WhiteLogo } from '../../components/logo'
 import Link from 'next/link';
-import { Layout, Menu, Button, theme, Avatar, Dropdown, Space } from 'antd';
+import { Layout, Menu, Button, theme, Avatar, Dropdown, Space, message } from 'antd';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import { Image } from '@chakra-ui/react'
 import router from 'next/router';
-
+import { setUserDetails } from '@/redux/reducerSlice/userSlice';
+import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux'
 import {
     MenuFoldOutlined,
     MenuUnfoldOutlined,
     LogoutOutlined,
     SecurityScanOutlined,
-    HomeOutlined,
     ShopOutlined,
     DownOutlined,
     SettingOutlined,
@@ -21,30 +21,63 @@ import {
     RollbackOutlined
 
 } from '@ant-design/icons';
-const SignupSchema = Yup.object().shape({
-    firstName: Yup.string()
-        .min(2, 'Too Short!')
-        .max(50, 'Too Long!')
-        .required('Required'),
-    lastName: Yup.string()
-        .min(2, 'Too Short!')
-        .max(50, 'Too Long!')
-        .required('Required'),
-    email: Yup.string().email('Invalid email').required('Required'),
-    password: Yup.string()
-        .min(5, 'Password Too Short!')
-        .required('Required'),
-    newPassword: Yup.string()
-        .min(5, 'Password Too Short!')
-        .required('Required'),
-    confirmNewPassword: Yup.string()
-        .min(5, 'Password Too Short!')
-        .required('Required')
-        .oneOf([Yup.ref('newPassword'), null], 'Passwords must match'),
-});
+
 const EditProfile = () => {
-    const { isLoggedIn, userDetails } = useSelector(state => state.users)
+    const { userDetails, token } = useSelector(state => state.users)
+    const dispatch = useDispatch();
+
+    const [messageApi, contextHolder] = message.useMessage();
+    const SignupSchema = Yup.object().shape({
+        fullName: Yup.string()
+            .min(2, 'Too Short!')
+            .max(50, 'Too Long!')
+            .required('Required'),
+        companyName: Yup.string()
+            .min(2, 'Too Short!')
+            .max(50, 'Too Long!')
+            .required('Required'),
+        email: Yup.string().email('Invalid email').required('Required'),
+        address: Yup.string()
+            .min(2, 'Too Short!')
+            .max(50, 'Too Long!'),
+        city: Yup.string()
+            .min(2, 'Too Short!')
+            .max(50, 'Too Long!'),
+        state: Yup.string()
+            .min(2, 'Too Short!')
+            .max(50, 'Too Long!'),
+        country: Yup.string()
+            .min(2, 'Too Short!')
+            .max(50, 'Too Long!'),
+    });
+    const handleSubmit = async (values) => {
+        const newData = { userDetails }
+        newData.country = values.country
+        newData.address = values.address
+        newData.state = values.state
+        newData.city = values.city
+        newData.token = token
+        try {
+            const res = await fetch(`http://localhost:4000/profile/${userDetails._id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(values)
+            });
+            const data = await res.json();
+
+            if (data && res.status == 200) {
+                dispatch(setUserDetails(newData))
+                messageApi.info(data.msg);
+            } else {
+                messageApi.info(data.msg);
+            }
+        } catch (error) {
+        }
+
+    }
+
     return <div className='ml-64 flex flex-col gap-12'>
+        {contextHolder}
         <div className='relative right-8'> <Link href="/dashboard">
             <RollbackOutlined className='text-3xl relative right-8 bottom-3 text-gray-600 hover:cursor-pointer' />
         </Link><p className='text-5xl inline'>Edit Profile</p></div>
@@ -56,39 +89,38 @@ const EditProfile = () => {
         /></div>
         <div>     <Formik
             initialValues={{
-                firstName: '',
-                lastName: '',
-                email: '',
-                address: '',
-                city: '',
-                state: '',
-                country: '',
+                fullName: userDetails?.fullName,
+                companyName: userDetails?.companyName,
+                email: userDetails?.email,
+                address: userDetails?.address,
+                city: userDetails?.city,
+                state: userDetails?.state,
+                country: userDetails?.country,
 
             }}
             validationSchema={SignupSchema}
             onSubmit={values => {
-                // same shape as initial values
-                console.log(values);
+                handleSubmit(values);
             }}
         >
             {({ errors, touched }) => (
                 <Form className='flex flex-col gap-5'>
                     <div className='flex gap-10'>
                         <div className=''><label className=' text-lg block'>Full Name: </label>
-                            <Field name="fullName" value={userDetails?.fullName} placeholder="John Doe" className="border-gray-400 	border-2 rounded-sm p-1 w-64" />
+                            <Field name="fullName" placeholder="John Doe" className="border-gray-400 	border-2 rounded-sm p-1 w-64" />
                             {errors.fullName && touched.fullName ? (
                                 <div>{errors.fullName}</div>
                             ) : null}</div>
                         <div className=''><label className=' text-lg block'>Company Name: </label>
 
-                            <Field name="companyName" value={userDetails?.companyName} placeholder="XYZ PVT LTD" className="border-gray-400 	border-2 rounded-sm p-1 w-72" />
+                            <Field name="companyName" placeholder="XYZ PVT LTD" className="border-gray-400 	border-2 rounded-sm p-1 w-72" />
                             {errors.companyName && touched.companyName ? (
                                 <div>{errors.companyName}</div>
                             ) : null}</div>
                     </div>
                     <div>
                         <label className='text-lg block'>Email: </label>
-                        <Field name="email" type="email" value={userDetails?.email} placeholder="john.doe@gmail.com" className="border-gray-400 	border-2 rounded-sm p-1 w-96 " />
+                        <Field name="email" type="email" placeholder="john.doe@gmail.com" className="border-gray-400 	border-2 rounded-sm p-1 w-96 " />
                         {errors.email && touched.email ? <div>{errors.email}</div> : null}
                     </div>
                     <div><label className=' text-lg block'>Address </label>
@@ -120,9 +152,21 @@ const EditProfile = () => {
             )}
         </Formik></div>
 
-    </div>
+    </div >
 }
 const Security = () => {
+    const SignupSchema = Yup.object().shape({
+        password: Yup.string()
+            .min(5, 'Password Too Short!')
+            .required('Required'),
+        newPassword: Yup.string()
+            .min(5, 'Password Too Short!')
+            .required('Required'),
+        confirmNewPassword: Yup.string()
+            .min(5, 'Password Too Short!')
+            .required('Required')
+            .oneOf([Yup.ref('newPassword'), null], 'Passwords must match'),
+    });
     return <div className='ml-64 flex flex-col gap-12'>
         <div className='relative right-8'> <Link href="/dashboard">
             <RollbackOutlined className='text-3xl relative right-8 bottom-3 text-gray-600 hover:cursor-pointer' />
