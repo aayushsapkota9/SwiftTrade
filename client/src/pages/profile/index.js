@@ -99,8 +99,10 @@ const EditProfile = () => {
 
             }}
             validationSchema={SignupSchema}
-            onSubmit={values => {
+            onSubmit={(values) => {
+
                 handleSubmit(values);
+
             }}
         >
             {({ errors, touched }) => (
@@ -157,7 +159,7 @@ const EditProfile = () => {
 const Security = () => {
     const { userDetails, token } = useSelector(state => state.users)
     const [messageApi, contextHolder] = message.useMessage();
-    const handleChangePassword = async (values) => {
+    const handleChangePassword = async (values, resetForm) => {
         const { confirmNewPassword, ...formFields } = values
         const requestOptions = {
             method: 'PUT',
@@ -169,8 +171,10 @@ const Security = () => {
         if (data && res.status == 200) {
 
             messageApi.info(data.msg);
+            resetForm();
         } else if (data && res.status == 401) {
             messageApi.info(data.msg);
+
         }
 
 
@@ -201,8 +205,10 @@ const Security = () => {
 
             }}
             validationSchema={ChangePasswordSchema}
-            onSubmit={values => {
-                handleChangePassword(values);
+            onSubmit={(values, { resetForm }) => {
+
+                handleChangePassword(values, resetForm);
+
 
             }}
         >

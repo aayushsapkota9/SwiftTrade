@@ -87,12 +87,12 @@ const changePassword = async (req, res) => {
             if (isMatched) {
                 req.body.newPassword = await bcrypt.hash(req.body.newPassword, saltRounds)
                 await Users.findByIdAndUpdate(req.params.id, { password: req.body.newPassword })
-                res.json({
+                res.status(200).json({
                     msg: "Password Changed Successfully",
                     success: true
                 })
             } else {
-                res.json({
+                res.status(401).json({
                     success: false,
                     msg: "Current Password doesn't match"
                 })
