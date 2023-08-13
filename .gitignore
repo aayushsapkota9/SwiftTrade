@@ -52,3 +52,8 @@ jspm_packages
 .env
 **/.env
 /server/.env
+#Exclude uploads
+/server/uploads
+/server/uploads/
+**/uploads
+uploads
