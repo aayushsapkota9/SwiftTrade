@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import * as Yup from 'yup';
-import { Button, Modal, message, Table } from 'antd';
+import { Button, Modal, message, Table, Pagination } from 'antd';
 import CustomFrom from './custom_form';
 
 
@@ -12,14 +12,10 @@ const Inventory = () => {
     };
     const onSubmit = async (values) => {
         const data = new FormData();
-        // console.log(values)
         const { image, ...otherFields } = values;
-        console.log(otherFields)
         Object.keys(otherFields).forEach((item) => {
             data.append(item, otherFields[item])
         })
-        console.log(data)
-        data.append('values', otherFields);
         data.append('image', image);
         const res = await fetch('http://localhost:4000/inventory/items', {
             method: 'POST',
@@ -117,9 +113,7 @@ const Inventory = () => {
         </div>
     </div >
 }
-export default Inventory;
 const InventoryTable = () => {
-
     const columns = [
         {
             title: 'Name',
@@ -127,7 +121,7 @@ const InventoryTable = () => {
         },
         {
             title: 'Category',
-            dataIndex: 'address',
+            dataIndex: 'category',
         },
         {
             title: 'Purchase Price',
@@ -135,18 +129,31 @@ const InventoryTable = () => {
         },
         {
             title: 'Selling Price',
-            dataIndex: 'age',
+            dataIndex: 'sellingPrice',
         },
-
     ];
-    const data = [];
-    for (let i = 0; i < 46; i++) {
-        data.push({
-            name: `Edward King ${i}`,
-            age: 32,
-            address: `London, Park Lane no. ${i}`,
-        });
+    const [inventoryList, setInventoryList] = useState([])
+    const [totalCount, setTotalCount] = useState(0)
+
+    const fetchUserDetails = async (page = 1, size = 10) => {
+        console.log(page, size)
+        const res = await fetch(`http://localhost:4000/inventory/all-items?page=${page}&size=${size}`)
+        const data = await res.json()
+        const inventoryListDestructured = []
+        data.inventoryList.forEach((item) => {
+            const { _id, ...otherFields } = item
+            otherFields.key = _id
+            inventoryListDestructured.push(
+                otherFields,
+            )
+        })
+        setInventoryList(inventoryListDestructured)
+        setTotalCount(data.count)
     }
+    useEffect(() => {
+        fetchUserDetails()
+    }, [])
+    const data = inventoryList;
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
     const [loading, setLoading] = useState(false);
     const start = () => {
@@ -166,6 +173,7 @@ const InventoryTable = () => {
         onChange: onSelectChange,
     };
     const hasSelected = selectedRowKeys.length > 0;
+
     return (
         <div>
             <div
@@ -184,7 +192,24 @@ const InventoryTable = () => {
                     {hasSelected ? `Selected ${selectedRowKeys.length} items` : ''}
                 </span>
             </div>
+            <Pagination onChange={(page, size) => fetchUserDetails(page, size)} defaultCurrent={1} total={totalCount} showSizeChanger />
             <Table rowSelection={rowSelection} columns={columns} dataSource={data} pagination={false} />
         </div>
     );
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+export default Inventory;

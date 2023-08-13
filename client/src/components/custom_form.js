@@ -12,9 +12,12 @@ const CustomFrom = (props) => {
         <Formik
             initialValues={props.initialValues}
             validationSchema={SignupSchema}
-            onSubmit={values => {
+            onSubmit={(values, { resetForm }) => {
+
                 values = { ...values, image }
                 props.onSubmit(values)
+                resetForm();
+
             }}
         >
             {({ errors, touched }) => (

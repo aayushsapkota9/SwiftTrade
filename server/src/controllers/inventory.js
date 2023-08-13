@@ -1,10 +1,8 @@
 const Inventory = require('../models/inventory');
 const addInventory = async (req, res) => {
-    console.log(req.body)
     try {
         const fields = req.body
         fields.image = req.file.filename
-
         const data = await Inventory.create(fields);
         if (data) {
             res.status(200).json({
@@ -25,12 +23,15 @@ const addInventory = async (req, res) => {
 }
 const getAllInventory = async (req, res) => {
     try {
-        const data = await Inventory.find()
+        const data = await Inventory.find().limit(req.query.size).skip((req.query.page - 1) * req.query.size)
+        const count = await Inventory.find().count()
+
         if (data) {
             res.json({
-                data,
+                inventoryList: data,
                 msg: "Success",
-                success: true
+                success: true,
+                count
             })
         }
 
