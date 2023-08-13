@@ -57,3 +57,4 @@ jspm_packages
 /server/uploads/
 **/uploads
 uploads
+server/uploads/
