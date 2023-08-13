@@ -1,6 +1,6 @@
 const Inventory = require('../models/inventory');
-const multer = require('multer');
 const addInventory = async (req, res) => {
+    console.log(req.body)
     try {
         const fields = req.body
         fields.image = req.file.filename

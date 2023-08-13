@@ -1,74 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import * as Yup from 'yup';
-import { Button, Modal, message, Avatar, Divider, List, Skeleton } from 'antd';
+import { Button, Modal, message, Table } from 'antd';
 import CustomFrom from './custom_form';
-import InfiniteScroll from 'react-infinite-scroll-component';
 
-
-const InventoryList = () => {
-    const [loading, setLoading] = useState(false);
-    const [data, setData] = useState([]);
-    const loadMoreData = () => {
-        if (loading) {
-            return;
-        }
-        setLoading(true);
-        fetch('https://randomuser.me/api/?results=10&inc=name,gender,email,nat,picture&noinfo')
-            .then((res) => res.json())
-            .then((body) => {
-                setData([...data, ...body.results]);
-                setLoading(false);
-            })
-            .catch(() => {
-                setLoading(false);
-            });
-    };
-    useEffect(() => {
-        loadMoreData();
-    }, []);
-    return (
-        <div
-            id="scrollableDiv"
-            style={{
-                height: 690,
-                overflow: 'auto',
-                padding: '0 16px',
-                border: '1px solid rgba(140, 140, 140, 0.35)',
-            }}
-        >
-            <InfiniteScroll
-                dataLength={data.length}
-                next={loadMoreData}
-                hasMore={data.length < 50}
-                loader={
-                    <Skeleton
-                        avatar
-                        paragraph={{
-                            rows: 1,
-                        }}
-                        active
-                    />
-                }
-                endMessage={<Divider plain>It is all, nothing more 🤐</Divider>}
-                scrollableTarget="scrollableDiv"
-            >
-                <List
-                    dataSource={data}
-                    renderItem={(item) => (
-                        <List.Item key={item.email}>
-                            <List.Item.Meta
-                                avatar={<Avatar src={item.picture.large} />}
-                                title={<a href="https://ant.design">{item.name.last}</a>}
-                                description={item.email}
-                            />
-                            <div>Content</div>
-                        </List.Item>
-                    )}
-                />
-            </InfiniteScroll>
-        </div>
-    );
-};
 
 const Inventory = () => {
 
@@ -77,24 +11,26 @@ const Inventory = () => {
         setIsModalOpen(true);
     };
     const onSubmit = async (values) => {
-        console.log(values)
-        setIsModalOpen(false);
-        try {
-            const res = await fetch('http://localhost:4000/inventory/items', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(values)
-            });
-            const data = await res.json();
-
-            if (data && res.status == 200) {
-                messageApi.info(data.msg);
-                router.push('/dashboard')
-            } else {
-                messageApi.info(data.msg);
-            }
-        } catch (error) {
-
+        const data = new FormData();
+        // console.log(values)
+        const { image, ...otherFields } = values;
+        console.log(otherFields)
+        Object.keys(otherFields).forEach((item) => {
+            data.append(item, otherFields[item])
+        })
+        console.log(data)
+        data.append('values', otherFields);
+        data.append('image', image);
+        const res = await fetch('http://localhost:4000/inventory/items', {
+            method: 'POST',
+            body: data
+        });
+        const resData = await res.json();
+        if (resData && res.status == 200) {
+            messageApi.info(resData.msg);
+            setIsModalOpen(false);
+        } else {
+            messageApi.info(resData.msg);
         }
     };
     const handleCancel = () => {
@@ -177,10 +113,78 @@ const Inventory = () => {
         </div>
         <hr ></hr>
         <div>
-            <InventoryList></InventoryList>
+            <InventoryTable ></InventoryTable>
         </div>
     </div >
 }
-
-
 export default Inventory;
+const InventoryTable = () => {
+
+    const columns = [
+        {
+            title: 'Name',
+            dataIndex: 'name',
+        },
+        {
+            title: 'Category',
+            dataIndex: 'address',
+        },
+        {
+            title: 'Purchase Price',
+            dataIndex: 'purchasePrice',
+        },
+        {
+            title: 'Selling Price',
+            dataIndex: 'age',
+        },
+
+    ];
+    const data = [];
+    for (let i = 0; i < 46; i++) {
+        data.push({
+            name: `Edward King ${i}`,
+            age: 32,
+            address: `London, Park Lane no. ${i}`,
+        });
+    }
+    const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const start = () => {
+        setLoading(true);
+        // ajax request after empty completing
+        setTimeout(() => {
+            setSelectedRowKeys([]);
+            setLoading(false);
+        }, 1000);
+    };
+    const onSelectChange = (newSelectedRowKeys) => {
+        console.log('selectedRowKeys changed: ', newSelectedRowKeys);
+        setSelectedRowKeys(newSelectedRowKeys);
+    };
+    const rowSelection = {
+        selectedRowKeys,
+        onChange: onSelectChange,
+    };
+    const hasSelected = selectedRowKeys.length > 0;
+    return (
+        <div>
+            <div
+                style={{
+                    marginBottom: 16,
+                }}
+            >
+                <Button type="primary" onClick={start} disabled={!hasSelected} loading={loading}>
+                    Reload
+                </Button>
+                <span
+                    style={{
+                        marginLeft: 8,
+                    }}
+                >
+                    {hasSelected ? `Selected ${selectedRowKeys.length} items` : ''}
+                </span>
+            </div>
+            <Table rowSelection={rowSelection} columns={columns} dataSource={data} pagination={false} />
+        </div>
+    );
+};

@@ -13,7 +13,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage })
 const inventoryController = require('../controllers/inventory')
-router.post('/items', upload.single('avatar'), inventoryController.addInventory)
+router.post('/items', upload.single('image'), inventoryController.addInventory)
 router.get('/all-items', inventoryController.getAllInventory)
 module.exports = router;
 
