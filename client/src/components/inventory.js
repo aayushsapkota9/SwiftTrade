@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import * as Yup from 'yup';
 import { Button, Modal, message, Table, Pagination } from 'antd';
 import CustomFrom from './custom_form';
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 
 
 const Inventory = () => {
-
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isAddProductModalOpen, setisAddProductModalOpen] = useState(false);
     const showModal = () => {
-        setIsModalOpen(true);
+        setisAddProductModalOpen(true);
     };
     const onSubmit = async (values) => {
         const data = new FormData();
@@ -24,15 +24,16 @@ const Inventory = () => {
         const resData = await res.json();
         if (resData && res.status == 200) {
             messageApi.info(resData.msg);
-            setIsModalOpen(false);
+            setisAddProductModalOpen(false);
         } else {
             messageApi.info(resData.msg);
         }
     };
     const handleCancel = () => {
-        setIsModalOpen(false);
+        setisAddProductModalOpen(false);
     };
     const [messageApi, contextHolder] = message.useMessage();
+
 
     return <div>
         <div className='flex justify-between mb-10 mt-2'>
@@ -42,7 +43,7 @@ const Inventory = () => {
                 <Button onClick={showModal}>
                     Add Inventory
                 </Button>
-                <Modal title="Basic Modal" open={isModalOpen} footer={null} onCancel={handleCancel}>
+                <Modal title="Basic Modal" open={isAddProductModalOpen} footer={null} onCancel={handleCancel}>
                     <div>
                         {contextHolder}
                         <CustomFrom
@@ -114,7 +115,15 @@ const Inventory = () => {
     </div >
 }
 const InventoryTable = () => {
+    const [inventoryList, setInventoryList] = useState([])
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [totalCount, setTotalCount] = useState(0)
     const columns = [
+        {
+            title: 'SN',
+            dataIndex: 'index',
+        },
         {
             title: 'Name',
             dataIndex: 'name',
@@ -131,11 +140,12 @@ const InventoryTable = () => {
             title: 'Selling Price',
             dataIndex: 'sellingPrice',
         },
+        {
+            title: 'Actions',
+            render: () => <div className='flex gap-5 '><EditOutlined onClick={showEditModal} /><DeleteOutlined onClick={showDeleteModal} /></div>
+        },
     ];
-    const [inventoryList, setInventoryList] = useState([])
-    const [totalCount, setTotalCount] = useState(0)
-
-    const fetchUserDetails = async (page = 1, size = 10) => {
+    const fetchInventoryDetails = async (page = 1, size = 10) => {
         console.log(page, size)
         const res = await fetch(`http://localhost:4000/inventory/all-items?page=${page}&size=${size}`)
         const data = await res.json()
@@ -151,19 +161,10 @@ const InventoryTable = () => {
         setTotalCount(data.count)
     }
     useEffect(() => {
-        fetchUserDetails()
+        fetchInventoryDetails()
     }, [])
     const data = inventoryList;
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const start = () => {
-        setLoading(true);
-        // ajax request after empty completing
-        setTimeout(() => {
-            setSelectedRowKeys([]);
-            setLoading(false);
-        }, 1000);
-    };
     const onSelectChange = (newSelectedRowKeys) => {
         console.log('selectedRowKeys changed: ', newSelectedRowKeys);
         setSelectedRowKeys(newSelectedRowKeys);
@@ -173,7 +174,16 @@ const InventoryTable = () => {
         onChange: onSelectChange,
     };
     const hasSelected = selectedRowKeys.length > 0;
-
+    const showEditModal = () => {
+        setIsEditModalOpen(true)
+    }
+    const showDeleteModal = () => {
+        setIsDeleteModalOpen(true)
+    }
+    const handleCancel = () => {
+        setIsEditModalOpen(false)
+        setIsDeleteModalOpen(false)
+    };
     return (
         <div>
             <div
@@ -181,9 +191,6 @@ const InventoryTable = () => {
                     marginBottom: 16,
                 }}
             >
-                <Button type="primary" onClick={start} disabled={!hasSelected} loading={loading}>
-                    Reload
-                </Button>
                 <span
                     style={{
                         marginLeft: 8,
@@ -192,24 +199,21 @@ const InventoryTable = () => {
                     {hasSelected ? `Selected ${selectedRowKeys.length} items` : ''}
                 </span>
             </div>
-            <Pagination onChange={(page, size) => fetchUserDetails(page, size)} defaultCurrent={1} total={totalCount} showSizeChanger />
             <Table rowSelection={rowSelection} columns={columns} dataSource={data} pagination={false} />
+            <Modal title="Basic Modal" open={isDeleteModalOpen} onCancel={handleCancel} footer={false}>
+                <p>Delete..</p>
+                <p>Some contents...</p>
+                <p>Some contents...</p>
+            </Modal>
+            <Modal title="Basic Modal" open={isEditModalOpen} onCancel={handleCancel} footer={false}>
+                <p>.Edit..</p>
+                <p>Some contents...</p>
+                <p>Some contents...</p>
+            </Modal>
+            <Pagination onChange={(page, size) => fetchUserDetails(page, size)} defaultCurrent={1} total={totalCount} showSizeChanger />
         </div>
     );
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 export default Inventory;
