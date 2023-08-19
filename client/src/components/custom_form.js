@@ -7,7 +7,6 @@ import * as Yup from 'yup';
 const CustomFrom = (props) => {
     const [image, setImage] = useState(null);
     const SignupSchema = Yup.object().shape(props.schema);
-    console.log(props.fields)
     return < div >
         <Formik
             initialValues={props.initialValues}
