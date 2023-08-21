@@ -65,4 +65,48 @@ const getItemImageById = async (req, res) => {
         })
     }
 }
-module.exports = { addInventory, getAllInventory, getItemImageById };
+const editInventory = async (req, res) => {
+    try {
+        const fields = req.body
+        fields.itemImage = req.file?.filename
+        console.log(fields)
+        const data = await Inventory.findByIdAndUpdate(req.params.id, fields)
+        if (data) {
+            res.status(200).json({
+                msg: "Edit Item Successful ",
+                success: true,
+            })
+
+        }
+        else {
+            res.json({
+                msg: "something went wrong",
+                success: false,
+            })
+        }
+    } catch (err) {
+        console.log(err)
+    }
+}
+const deleteInventory = async (req, res) => {
+    try {
+        const fields = req.body
+        fields.itemImage = req.file?.filename
+        const data = await Inventory.findByIdAndDelete(req.params.id)
+        if (data) {
+            res.status(200).json({
+                msg: "Item Deleted ",
+                success: true,
+            })
+        }
+        else {
+            res.json({
+                msg: "Something went wrong",
+                success: false,
+            })
+        }
+    } catch (err) {
+        console.log(err)
+    }
+}
+module.exports = { addInventory, getAllInventory, getItemImageById, editInventory, deleteInventory };

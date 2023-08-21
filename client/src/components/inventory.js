@@ -29,6 +29,26 @@ const Inventory = () => {
             messageApi.info(resData.msg);
         }
     };
+    const editInventory = async (values) => {
+        const data = new FormData();
+        const { image, ...otherFields } = values;
+        Object.keys(otherFields).forEach((item) => {
+            data.append(item, otherFields[item])
+        })
+        image ? data.append('image', image) : data.append('image', currentInventoryItem.image)
+        data.append('_id', currentInventoryItem.key)
+        const res = await fetch(`http://localhost:4000/inventory/items/${currentInventoryItem.key}`, {
+            method: 'PUT',
+            body: data
+        });
+        const resData = await res.json();
+        if (resData && res.status == 200) {
+            messageApi.info(resData.msg);
+            setIsEditModalOpen(false);
+        } else {
+            messageApi.info(resData.msg);
+        }
+    };
     const [messageApi, contextHolder] = message.useMessage();
     const [inventoryList, setInventoryList] = useState([])
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -74,6 +94,7 @@ const Inventory = () => {
                             setCurrentInventoryItem(value)
                         }}>Delete</DeleteOutlined>
                     </Popconfirm>
+                    {contextHolder}
                 </div >)
             }
         },
@@ -166,15 +187,22 @@ const Inventory = () => {
         category: currentInventoryItem.category,
         sellingPrice: currentInventoryItem.sellingPrice,
         purchasePrice: currentInventoryItem.purchasePrice,
-        image: ''
+        image: currentInventoryItem.image
     }
-    const confirm = (e) => {
-        console.log(e);
-        message.success('Click on Yes');
+    const confirm = async () => {
+        const res = await fetch(`http://localhost:4000/inventory/items/${currentInventoryItem.key}`, {
+            method: 'DELETE',
+            body: data
+        });
+        const resData = await res.json();
+        if (resData && res.status == 200) {
+            messageApi.info(resData.msg);
+        } else {
+            messageApi.info(resData.msg);
+        }
     };
     const cancel = (e) => {
-        console.log(e);
-        message.error('Click on No');
+
     };
 
 
@@ -216,6 +244,7 @@ const Inventory = () => {
                 <Modal title="Edit Item" open={isEditModalOpen} onCancel={handleCancel} footer={false} width={1000} >
                     <div className='flex gap-10'>
                         <div>
+                            {contextHolder}
                             <CustomFrom
                                 schema={addInventorySchema}
                                 parentClass={" flex flex-col gap-5"}
@@ -224,7 +253,7 @@ const Inventory = () => {
                                 errorClass={'flex gap-3'}
                                 initialValues={editInventoryInitials}
                                 fields={addInventoryFields}
-                                onSubmit={addInventory}
+                                onSubmit={editInventory}
                                 imageLabel={"Change Image"}
                             ></CustomFrom>
                         </div>
@@ -233,6 +262,8 @@ const Inventory = () => {
                                 width={500}
                                 src={`http://localhost:4000/inventory/item-image/${currentInventoryItem.key}`}
                             />
+                            {JSON.stringify(currentInventoryItem)}
+                            {JSON.stringify(editInventoryInitials)}
                         </div>
                     </div>
                 </Modal>
