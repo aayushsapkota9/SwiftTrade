@@ -24,8 +24,8 @@ const CustomFrom = (props) => {
 
                     {props.fields.map((item) => {
                         return <div className={props.errorClass}>
-                            <label className={item.labelClass}>{item.label} </label>
-                            <Field name={item.name} placeholder={item.placeholder} className={item.className} />
+                            <div className='flex flex-col'><label className={item.labelClass}>{item.label} </label>
+                                <Field name={item.name} placeholder={item.placeholder} className={item.className} /></div>
                             {errors[item?.name] && touched[item?.name] ? (
                                 <div className='text-red-600'>{errors[item?.name]}</div>
                             ) : null}
@@ -35,7 +35,7 @@ const CustomFrom = (props) => {
                         {props.imageLabel ? <label>{props.imageLabel} </label> : null}
                         {props.imageLabel ? <input type='file' name='image' onChange={(e) => setImage(e.target.files[0])} /> : null}
                     </div>
-                    <div className={props.submitClass}><button type="submit" >Submit</button></div>
+                    <div className={props.submitClass}><button type="submit" >{props.submitText}</button></div>
                 </Form>
             )}
         </Formik>

@@ -1,8 +1,11 @@
 const Inventory = require('../models/inventory');
+const fs = require('fs')
+const path = require('path')
+
 const addInventory = async (req, res) => {
     try {
         const fields = req.body
-        fields.image = req.file.filename
+        fields.itemImage = req.file?.filename
         const data = await Inventory.create(fields);
         if (data) {
             res.status(200).json({
@@ -31,7 +34,7 @@ const getAllInventory = async (req, res) => {
                 inventoryList: data,
                 msg: "Success",
                 success: true,
-                count
+                count,
             })
         }
 
@@ -39,4 +42,27 @@ const getAllInventory = async (req, res) => {
         console.log(error)
     }
 }
-module.exports = { addInventory, getAllInventory };
+const getItemImageById = async (req, res) => {
+    try {
+        const data = await Inventory.findById(req.params.id);
+        if (!data) {
+            res.json({
+                msg: 'no data found'
+            })
+        }
+        const imageDir = path.join(__dirname, '../../', 'uploads/inventory/' + data.itemImage)
+        const defaultDir = path.join(__dirname, '../../', 'uploads/inventory/default_product.jpg')
+
+        if (fs.existsSync(imageDir)) {
+            res.sendFile(imageDir)
+        } else {
+            res.sendFile(defaultDir)
+        }
+    } catch (error) {
+        console.error('Error:', error.message);
+        res.json({
+            msg: 'Item id doesn\'t exist'
+        })
+    }
+}
+module.exports = { addInventory, getAllInventory, getItemImageById };

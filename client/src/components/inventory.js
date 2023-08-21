@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import * as Yup from 'yup';
-import { Button, Modal, message, Table, Pagination } from 'antd';
+import { Button, Modal, message, Table, Pagination, Popconfirm, Image } from 'antd';
 import CustomFrom from './custom_form';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 
@@ -10,7 +10,7 @@ const Inventory = () => {
     const showModal = () => {
         setIsAddProductModalOpen(true);
     };
-    const onSubmit = async (values) => {
+    const addInventory = async (values) => {
         const data = new FormData();
         const { image, ...otherFields } = values;
         Object.keys(otherFields).forEach((item) => {
@@ -31,10 +31,9 @@ const Inventory = () => {
     };
     const [messageApi, contextHolder] = message.useMessage();
     const [inventoryList, setInventoryList] = useState([])
-    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [totalCount, setTotalCount] = useState(0)
-    const [currentInventory, setCurrentInventory] = useState({})
+    const [currentInventoryItem, setCurrentInventoryItem] = useState({})
     const columns = [
         {
             title: 'SN',
@@ -60,14 +59,22 @@ const Inventory = () => {
             title: 'Actions',
             render: (value) => {
                 return (<div className='flex gap-5 '><EditOutlined onClick={() => {
-                    setCurrentInventory(value)
+                    setCurrentInventoryItem(value)
                     setIsEditModalOpen(true);
-                    console.log(currentInventory)
-                }} /><DeleteOutlined onClick={() => {
-                    setCurrentInventory(value)
-                    setIsDeleteModalOpen(true)
-                    console.log(currentInventory)
-                }} /></div>)
+                }} />
+                    <Popconfirm
+                        title="Delete item"
+                        description="Are you sure to delete the item?"
+                        onConfirm={confirm}
+                        onCancel={cancel}
+                        okText="Yes"
+                        cancelText="No"
+                    >
+                        <DeleteOutlined danger onClick={() => {
+                            setCurrentInventoryItem(value)
+                        }}>Delete</DeleteOutlined>
+                    </Popconfirm>
+                </div >)
             }
         },
     ];
@@ -101,77 +108,95 @@ const Inventory = () => {
     const handleCancel = () => {
         setIsAddProductModalOpen(false);
         setIsEditModalOpen(false)
-        setIsDeleteModalOpen(false)
     }
+    const addInventorySchema = {
+        name: Yup.string()
+            .min(2, 'Too Short!')
+            .max(50, 'Too Long!')
+            .required('Required'),
+        category: Yup.string()
+            .min(2, 'Too Short!')
+            .max(50, 'Too Long!')
+            .required('Required'),
+        purchasePrice: Yup.number().required('Required'),
+        sellingPrice: Yup.number().required('Required'),
+    }
+    const addInventoryFields = [{
+        label: 'Name',
+        labelClass: '',
+        name: 'name',
+        placeholder: `Enter the product's name`,
+        className: '"border-gray-600 bg-gray-100	border-2 rounded-md p-1 w-96',
+
+    },
+    {
+        label: 'Category',
+        labelClass: '',
+        name: 'category',
+        placeholder: `Enter the product's category`,
+        className: '"border-gray-600 bg-gray-100	border-2 rounded-md p-1 w-96',
+
+    },
+    {
+        label: 'Purchase Price',
+        labelClass: '',
+        name: 'purchasePrice',
+        placeholder: `Amount`,
+        className: '"border-gray-600 bg-gray-100	border-2 rounded-md p-1 w-96',
+
+    },
+    {
+        label: 'Selling Price',
+        labelClass: '',
+        name: 'sellingPrice',
+        placeholder: `Amount`,
+        className: '"border-gray-600 bg-gray-100	border-2 rounded-md p-1 w-96',
+
+    },
+    ]
+    const addInventoryInitials = {
+        name: '',
+        category: '',
+        sellingPrice: '',
+        purchasePrice: '',
+        image: ''
+    }
+    const editInventoryInitials = {
+        name: currentInventoryItem.name,
+        category: currentInventoryItem.category,
+        sellingPrice: currentInventoryItem.sellingPrice,
+        purchasePrice: currentInventoryItem.purchasePrice,
+        image: ''
+    }
+    const confirm = (e) => {
+        console.log(e);
+        message.success('Click on Yes');
+    };
+    const cancel = (e) => {
+        console.log(e);
+        message.error('Click on No');
+    };
 
 
     return <div>
         <div className='flex justify-between mb-10 mt-2'>
-
             <div className='text-4xl'>Items</div>
             <div> <>
                 <Button onClick={showModal}>
                     Add Inventory
                 </Button>
-                <Modal title="Basic Modal" open={isAddProductModalOpen} footer={null} onCancel={handleCancel}>
+                <Modal title="Add Item" open={isAddProductModalOpen} footer={null} onCancel={handleCancel}>
                     <div>
                         {contextHolder}
                         <CustomFrom
-                            schema={{
-                                name: Yup.string()
-                                    .min(2, 'Too Short!')
-                                    .max(50, 'Too Long!')
-                                    .required('Required'),
-                                category: Yup.string()
-                                    .min(2, 'Too Short!')
-                                    .max(50, 'Too Long!')
-                                    .required('Required'),
-                                purchasePrice: Yup.number().required('Required'),
-                                sellingPrice: Yup.number().required('Required'),
-                            }} parentClass={" flex flex-col gap-5"}
-                            submitClass={"bg-gray-800 rounded-md text-white px-5 py-2 w-20 "}
+                            schema={addInventorySchema}
+                            parentClass={" flex flex-col gap-5"}
+                            submitClass={"bg-gray-800 rounded-md text-white px-5 py-2 w-32 flex justify-center "}
+                            submitText={"Add Item"}
                             errorClass={'flex gap-3'}
-                            initialValues={{
-                                name: '',
-                                category: '',
-                                sellingPrice: '',
-                                purchasePrice: '',
-                                image: ''
-                            }}
-                            fields={[{
-                                label: 'Name',
-                                labelClass: '',
-                                name: 'name',
-                                placeholder: `Enter the product's name`,
-                                className: 'border-black border-2',
-
-                            },
-                            {
-                                label: 'Category',
-                                labelClass: '',
-                                name: 'category',
-                                placeholder: `Enter the product's category`,
-                                className: 'border-black border-2',
-
-                            },
-                            {
-                                label: 'Purchase Price',
-                                labelClass: '',
-                                name: 'purchasePrice',
-                                placeholder: `Amount`,
-                                className: 'border-black border-2',
-
-                            },
-                            {
-                                label: 'Selling Price',
-                                labelClass: '',
-                                name: 'sellingPrice',
-                                placeholder: `Amount`,
-                                className: 'border-black border-2',
-
-                            },
-                            ]}
-                            onSubmit={onSubmit}
+                            initialValues={addInventoryInitials}
+                            fields={addInventoryFields}
+                            onSubmit={addInventory}
                             imageLabel={"Upload photo"}
                         ></CustomFrom>
                     </div>
@@ -181,30 +206,37 @@ const Inventory = () => {
         <hr ></hr>
         <div>
             <div>
-                <div
-                    style={{
-                        marginBottom: 16,
-                    }}
-                >
-                    <span
-                        style={{
-                            marginLeft: 8,
-                        }}
-                    >
+                <div style={{ marginBottom: 16, }}>
+                    <span style={{ marginLeft: 8, }}>
                         {hasSelected ? `Selected ${selectedRowKeys.length} items` : ''}
                     </span>
                 </div>
                 <Table rowSelection={rowSelection} columns={columns} dataSource={data} pagination={false} />
-                <Modal title="Basic Modal" open={isDeleteModalOpen} onCancel={handleCancel} footer={false}>
-                    <p>Delete..</p>
-                    <p>Some contents...</p>
-                    <p>Some contents...</p>
+
+                <Modal title="Edit Item" open={isEditModalOpen} onCancel={handleCancel} footer={false} width={1000} >
+                    <div className='flex gap-10'>
+                        <div>
+                            <CustomFrom
+                                schema={addInventorySchema}
+                                parentClass={" flex flex-col gap-5"}
+                                submitClass={"bg-gray-800 rounded-md text-white px-5 py-2 w-32 flex justify-center"}
+                                submitText={"Edit Item"}
+                                errorClass={'flex gap-3'}
+                                initialValues={editInventoryInitials}
+                                fields={addInventoryFields}
+                                onSubmit={addInventory}
+                                imageLabel={"Change Image"}
+                            ></CustomFrom>
+                        </div>
+                        <div>
+                            <Image
+                                width={500}
+                                src={`http://localhost:4000/inventory/item-image/${currentInventoryItem.key}`}
+                            />
+                        </div>
+                    </div>
                 </Modal>
-                <Modal title="Basic Modal" open={isEditModalOpen} onCancel={handleCancel} footer={false}>
-                    <p>.Edit..</p>
-                    {JSON.stringify(currentInventory)}
-                </Modal>
-                <Pagination onChange={(page, size) => fetchUserDetails(page, size)} defaultCurrent={1} total={totalCount} showSizeChanger />
+                <Pagination onChange={(page, size) => fetchInventoryDetails(page, size)} defaultCurrent={1} total={totalCount} showSizeChanger />
             </div>
         </div>
     </div >

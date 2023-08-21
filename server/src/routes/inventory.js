@@ -7,7 +7,8 @@ const storage = multer.diskStorage({
     },
     filename: function (req, file, cb) {
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
-        cb(null, file.fieldname + '-' + uniqueSuffix)
+        const fileExtension = file.originalname.split('.')[file.originalname.split('.').length - 1]
+        cb(null, `${file.fieldname}-${uniqueSuffix}.${fileExtension}`)
     }
 })
 
@@ -15,6 +16,7 @@ const upload = multer({ storage: storage })
 const inventoryController = require('../controllers/inventory')
 router.post('/items', upload.single('image'), inventoryController.addInventory)
 router.get('/all-items', inventoryController.getAllInventory)
+router.get('/item-image/:id', inventoryController.getItemImageById)
 module.exports = router;
 
 
