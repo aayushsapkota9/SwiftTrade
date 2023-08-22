@@ -9,6 +9,7 @@ const CustomFrom = (props) => {
     const SignupSchema = Yup.object().shape(props.schema);
     return < div >
         <Formik
+            enableReinitialize
             initialValues={props.initialValues}
             validationSchema={SignupSchema}
             onSubmit={(values, { resetForm }) => {

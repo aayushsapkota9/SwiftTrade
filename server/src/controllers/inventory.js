@@ -27,6 +27,7 @@ const addInventory = async (req, res) => {
 const getAllInventory = async (req, res) => {
     try {
         const data = await Inventory.find().limit(req.query.size).skip((req.query.page - 1) * req.query.size)
+        console.log(data)
         const count = await Inventory.find().count()
 
         if (data) {

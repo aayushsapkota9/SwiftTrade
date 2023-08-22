@@ -25,6 +25,7 @@ const Inventory = () => {
         if (resData && res.status == 200) {
             messageApi.info(resData.msg);
             setIsAddProductModalOpen(false);
+            fetchInventoryDetails();
         } else {
             messageApi.info(resData.msg);
         }
@@ -45,6 +46,7 @@ const Inventory = () => {
         if (resData && res.status == 200) {
             messageApi.info(resData.msg);
             setIsEditModalOpen(false);
+            fetchInventoryDetails();
         } else {
             messageApi.info(resData.msg);
         }
@@ -74,6 +76,10 @@ const Inventory = () => {
         {
             title: 'Selling Price',
             dataIndex: 'sellingPrice',
+        },
+        {
+            title: 'Quantity',
+            dataIndex: 'quantity',
         },
         {
             title: 'Actions',
@@ -139,6 +145,7 @@ const Inventory = () => {
             .min(2, 'Too Short!')
             .max(50, 'Too Long!')
             .required('Required'),
+        quantity: Yup.number().required('Required'),
         purchasePrice: Yup.number().required('Required'),
         sellingPrice: Yup.number().required('Required'),
     }
@@ -174,19 +181,30 @@ const Inventory = () => {
         className: '"border-gray-600 bg-gray-100	border-2 rounded-md p-1 w-96',
 
     },
+    {
+        label: 'Quantity',
+        labelClass: '',
+        name: 'quantity',
+        placeholder: `Quantity`,
+        className: '"border-gray-600 bg-gray-100	border-2 rounded-md p-1 w-96',
+
+    },
     ]
     const addInventoryInitials = {
         name: '',
         category: '',
         sellingPrice: '',
         purchasePrice: '',
-        image: ''
+        quantity: '',
+        image: '',
+
     }
     const editInventoryInitials = {
         name: currentInventoryItem.name,
         category: currentInventoryItem.category,
         sellingPrice: currentInventoryItem.sellingPrice,
         purchasePrice: currentInventoryItem.purchasePrice,
+        quantity: currentInventoryItem.quantity,
         image: currentInventoryItem.image
     }
     const confirm = async () => {
@@ -197,6 +215,7 @@ const Inventory = () => {
         const resData = await res.json();
         if (resData && res.status == 200) {
             messageApi.info(resData.msg);
+            fetchInventoryDetails()
         } else {
             messageApi.info(resData.msg);
         }
@@ -262,8 +281,6 @@ const Inventory = () => {
                                 width={500}
                                 src={`http://localhost:4000/inventory/item-image/${currentInventoryItem.key}`}
                             />
-                            {JSON.stringify(currentInventoryItem)}
-                            {JSON.stringify(editInventoryInitials)}
                         </div>
                     </div>
                 </Modal>
