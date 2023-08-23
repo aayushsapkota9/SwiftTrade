@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Steps, AutoComplete } from 'antd';
 import CustomFrom from './custom_form';
 import * as Yup from 'yup';
-import Inventory from './inventory';
+import BillingTable from './billing_table';
+
+BillingTable
 const SubBilling = () => {
     const [current, setCurrent] = useState(0);
-    const [inventoryList, setInventoryList] = useState([])
+    const [options, setOptions] = useState([])
     const onChange = (value) => {
         console.log('onChange:', value);
         setCurrent(value);
@@ -72,8 +74,8 @@ const SubBilling = () => {
         contact: '',
 
     }
-
     const fetchInventoryDetails = async (page = 1, size = 10) => {
+        //used to get inventory list details
         const res = await fetch(`http://localhost:4000/inventory/all-items?page=${page}&size=${size}`)
         const data = await res.json()
         const inventoryListDestructured = []
@@ -84,13 +86,15 @@ const SubBilling = () => {
                 otherFields,
             )
         })
-        setInventoryList(inventoryListDestructured)
+        setOptions(inventoryListDestructured.map((item) => {
+            return { value: item.name }
+        }))
+
 
     }
     useEffect(() => {
         fetchInventoryDetails()
     }, [])
-    const options = inventoryList;
 
     return (
         <div>
@@ -125,18 +129,31 @@ const SubBilling = () => {
                 ></CustomFrom>
             </div>
             <hr className='mt-8'></hr>
-            <AutoComplete
-                style={{
-                    width: 200,
-                }}
-                options={options}
-                placeholder="try to type `b`"
-                filterOption={(inputValue, options) =>
-                    options.name.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
-                }
-            />
-            {JSON.stringify(options)}
+            <div className='flex'>
+                {/* <AutoComplete
+                    style={{
+                        width: 200,
+
+                    }}
+                    options={options}
+                    placeholder="try to type `b`"
+                    filterOption={(inputValue, option) =>
+                        option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
+                    }
+                /> */}
+
+            </div>
+            <BillingTable ></BillingTable>
         </div>
     );
 };
 export default SubBilling;
+{/* <Button
+onClick={handleAdd}
+type="primary"
+style={{
+    marginBottom: 16,
+}}
+>
+Add a row
+</Button> */}
