@@ -163,12 +163,12 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 
 ## Features
 
-- [ ] Add inventory
+- [x] Add inventory
 - [ ] Add sales
-- [ ] View inventory
+- [x] View inventory
 - [ ] View Sales
 - [ ] Edit sales
-- [ ] Edit inventory
+- [x] Edit inventory
 - [ ] Add bank accounts
 - [ ] Can do transaction through bank
 
