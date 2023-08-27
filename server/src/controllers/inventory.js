@@ -27,7 +27,6 @@ const addInventory = async (req, res) => {
 const getAllInventory = async (req, res) => {
     try {
         const data = await Inventory.find().limit(req.query.size).skip((req.query.page - 1) * req.query.size)
-        console.log(data)
         const count = await Inventory.find().count()
 
         if (data) {
@@ -70,7 +69,7 @@ const editInventory = async (req, res) => {
     try {
         const fields = req.body
         fields.itemImage = req.file?.filename
-        console.log(fields)
+
         const data = await Inventory.findByIdAndUpdate(req.params.id, fields)
         if (data) {
             res.status(200).json({
@@ -110,4 +109,24 @@ const deleteInventory = async (req, res) => {
         console.log(err)
     }
 }
-module.exports = { addInventory, getAllInventory, getItemImageById, editInventory, deleteInventory };
+const getOneInventoryItem = async (req, res) => {
+    try {
+        const data = await Inventory.findById(req.params.id)
+        if (data) {
+            res.status(200).json({
+                item: data,
+                msg: "Success",
+                success: true,
+            })
+        }
+        else {
+            res.json({
+                msg: "Item with the id doesn't exist",
+                success: false,
+            })
+        }
+    } catch (err) {
+        console.log(err)
+    }
+}
+module.exports = { addInventory, getAllInventory, getItemImageById, editInventory, deleteInventory, getOneInventoryItem };
