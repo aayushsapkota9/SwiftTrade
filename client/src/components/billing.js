@@ -134,7 +134,12 @@ const Billing = () => {
             }, [])
 
             const addItemToBill = () => {
-                setBillItem([...billItem, currentItem,])
+                setBillItem([...billItem, {
+                    key: '',
+                    name: '',
+                    price: '',
+                    quantity: '',
+                },])
 
             }
             const fillUpDetails = (name, otherFields) => {
@@ -185,7 +190,7 @@ const Billing = () => {
                     key: 'action',
                     render: (_, record) => (
                         <Space size="middle">
-                            <a>Invite {JSON.stringify(record)}</a>
+                            <a>Invite {JSON.stringify(currentItem)}</a>
                             <a>Delete </a>
                         </Space>
                     ),
