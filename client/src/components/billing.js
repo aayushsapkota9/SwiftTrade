@@ -118,46 +118,45 @@ const Billing = () => {
                     )
                 })
                 setOptions(inventoryListDestructured.map((item) => {
-                    return { value: item.name, _id: item.key, sellingPrice: item.sellingPrice }
+                    return { value: item.name, key: item.key, price: item.sellingPrice }
                 }))
             }
-            // const fetchBillDetails = async (_id) => {
-            //     const res = await fetch(`http://localhost:4000/inventory/item/64e4f09c3315d71cd8814af6`)
-            //     const data = await res.json()
-            //     const tempData = billData
-            //     setBillData([data.item, ...billData])
-            //     console.log(billData)
-
-            // }
             useEffect(() => {
                 fetchInventoryDetails()
             }, [])
 
             const addItemToBill = () => {
+                setCurrentItem()
                 setBillItem([...billItem, {
                     key: '',
                     name: '',
                     price: '',
                     quantity: '',
-                },])
+                }])
 
             }
-            const fillUpDetails = (name, otherFields) => {
-                const temp = {
-                    key: otherFields._id,
-                    name: name,
-                    sellingPrice: otherFields.sellingPrice,
-                    quantity: 1,
-                }
-                setCurrentItem(temp)
+            const fillUpDetails = (id, currentBillItem, index) => {
+                let oldBillItems = [...billItem]
+                currentBillItem.quantity = 1
+                currentBillItem.total = currentBillItem.price * currentBillItem.quantity
+                oldBillItems[index] = currentBillItem
+                setBillItem(oldBillItems)
+                setCurrentItem(currentBillItem)
+            }
+            const setQuantity = (quantity, currentBillItem, index) => {
+                let oldBillItems = [...billItem]
+                currentBillItem.quantity = quantity.target.value
+                currentBillItem.total = currentBillItem.price * currentBillItem.quantity
+                oldBillItems[index] = currentBillItem
+                setBillItem(oldBillItems)
             }
             const columns = [
                 {
                     title: 'Name',
                     dataIndex: 'name',
                     key: 'name',
-                    render: (e) => <AutoComplete
-                        onSelect={fillUpDetails}
+                    render: (id, record, index) => <div><AutoComplete
+                        onSelect={(id, record) => fillUpDetails(id, record, index)}
                         backfill={true}
                         style={{
                             width: 200,
@@ -165,19 +164,24 @@ const Billing = () => {
                         options={options}
                         placeholder="Product's name"
                         filterOption={(inputValue, option) =>
-                            option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
-                        }
-                    />,
+                            option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1}
+                        defaultValue={currentItem}
+                    /></div>
                 },
                 {
                     title: 'Quantity',
                     dataIndex: 'quantity',
                     key: 'quantity',
+                    render: (id, record, index) => {
+                        return <div>
+                            {billItem[index].price ? <input onChange={(id) => setQuantity(id, record, index)} className='border-2 border-gray-200 rounded-md w-16  ' ></input> : null}
+                        </div>
+                    }
                 },
                 {
                     title: 'Price',
-                    dataIndex: 'sellingPrice',
-                    key: 'sellingPrice',
+                    dataIndex: 'price',
+                    key: 'price',
                 },
 
                 {
@@ -190,16 +194,33 @@ const Billing = () => {
                     key: 'action',
                     render: (_, record) => (
                         <Space size="middle">
-                            <a>Invite {JSON.stringify(currentItem)}</a>
-                            <a>Delete </a>
+                            <div className='hover:text-blue-400 hover:cursor-pointer'>Delete </div>
                         </Space>
                     ),
                 },
             ];
+            const tableSummary = () => (
+                <Table.Summary fixed>
+                    <Table.Summary.Row>
+                        <Table.Summary.Cell index={0}>Total</Table.Summary.Cell>
+                        <Table.Summary.Cell index={2}>
+                            <div className=' relative left-[450px]'>
+                                {billItem.reduce((accumator, item) => {
+                                    const currentItemPrice = item.price ? item.price : 0
+                                    return accumator += currentItemPrice
+                                }, 0)}
+                            </div>
+                        </Table.Summary.Cell>
+                    </Table.Summary.Row>
+                </Table.Summary>
+            )
             return (
                 <div>
-                    <Table columns={columns} dataSource={billItem} pagination={false} />
-                    <div><button className='border-black border-2 px-10 py-3 bg-black text-white' onClick={addItemToBill}>Add new Item</button></div>
+                    <Table columns={columns} dataSource={billItem} pagination={false} summary={tableSummary} />
+                    <div className='flex justify-between '><button className='border-black border-2 px-10 py-3 bg-black text-white' onClick={addItemToBill}>Add new Item</button>
+                        <button className='border-black border-2 px-10 py-3 bg-black text-white mr-16' >Send Invoice</button>
+                    </div>
+                    <div>{JSON.stringify(billItem)}</div>
                 </div>
             )
         }
