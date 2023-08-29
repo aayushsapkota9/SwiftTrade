@@ -168,7 +168,7 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 - [x] View inventory
 - [ ] View Sales
 - [ ] Edit sales
-- [x] Edit inventory
+- [x] Edit inventory items
 - [ ] Add bank accounts
 - [ ] Can do transaction through bank
 
