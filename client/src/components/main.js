@@ -3,7 +3,6 @@ import Image from 'next/image'
 import Meeting from '../../public/meetingheader.png'
 import WhiteLogo from "../../public/swift-logo-white.png"
 import Link from 'next/link';
-import { BlackLogo } from "../components/logo"
 const Main = () => {
     return (
         <div>
