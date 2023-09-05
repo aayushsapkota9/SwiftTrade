@@ -11,15 +11,16 @@ const BillingTab = () => {
             closable: false,
         },
     ]
-    const [activeTabKey, setactiveTabKey] = useState(initialTabItems[0].key);
+    const [activeTabKey, setActiveTabKey] = useState(initialTabItems[0].key);
     const [items, setItems] = useState(initialTabItems);
     const newTabIndex = useRef(0);
-    const onChange = (newactiveTabKey) => {
-        setactiveTabKey(newactiveTabKey);
+    const onChange = (newActiveTabKey) => {
+        console.log(newActiveTabKey)
+        setActiveTabKey(newActiveTabKey);
     };
     const onTabEdit = (targetKey, action) => {
         const remove = (targetKey) => {
-            let newactiveTabKey = activeTabKey;
+            let newActiveTabKey = activeTabKey;
             let lastIndex = -1;
             items.forEach((item, i) => {
                 if (item.key === targetKey) {
@@ -27,27 +28,27 @@ const BillingTab = () => {
                 }
             });
             const newPanes = items.filter((item) => item.key !== targetKey);
-            if (newPanes.length && newactiveTabKey === targetKey) {
+            if (newPanes.length && newActiveTabKey === targetKey) {
                 if (lastIndex >= 0) {
-                    newactiveTabKey = newPanes[lastIndex].key;
+                    newActiveTabKey = newPanes[lastIndex].key;
                 } else {
-                    newactiveTabKey = newPanes[0].key;
+                    newActiveTabKey = newPanes[0].key;
                 }
             }
             setItems(newPanes);
-            setactiveTabKey(newactiveTabKey);
+            setActiveTabKey(newActiveTabKey);
         };
         const add = () => {
-            const newactiveTabKey = `newTab${newTabIndex.current++}`;
-            console.log(newactiveTabKey)
+            const newActiveTabKey = `newTab${newTabIndex.current++}`;
+            console.log(newActiveTabKey)
             const newPanes = [...items];
             newPanes.push({
                 label: 'New Tab',
                 children: <BillForm></BillForm>,
-                key: newactiveTabKey,
+                key: newActiveTabKey,
             });
             setItems(newPanes);
-            setactiveTabKey(newactiveTabKey);
+            setActiveTabKey(newActiveTabKey);
         };
 
         if (action === 'add') {
@@ -58,10 +59,12 @@ const BillingTab = () => {
     };
     return (
         <Tabs
-            className='w-full'
+            size={'large'}
+            animated={true}
+            className='w-full '
             type="editable-card"
             onChange={onChange}
-            activeTabKey={activeTabKey}
+            activeKey={activeTabKey}
             onEdit={onTabEdit}
             items={items}
         />

@@ -1,17 +1,21 @@
 import React, { useState } from 'react';
-import { Formik, Form, Field } from 'formik';
+import { Formik, Form, Field, useFormikContext } from 'formik';
 import * as Yup from 'yup';
 
 
 
 const CustomFrom = (props) => {
     const [image, setImage] = useState(null);
+
+
     const SignupSchema = Yup.object().shape(props.schema);
     return < div >
         <Formik
+
             enableReinitialize
             initialValues={props.initialValues}
             validationSchema={SignupSchema}
+
             onSubmit={(values, { resetForm }) => {
 
                 values = { ...values, image }
@@ -19,14 +23,16 @@ const CustomFrom = (props) => {
                 resetForm();
 
             }}
+
+
         >
             {({ errors, touched }) => (
-                <Form className={props.parentClass}>
+                <Form className={props.parentClass} >
 
                     {props.fields.map((item) => {
                         return <div className={props.errorClass}>
                             <div className='flex flex-col'><label className={item.labelClass}>{item.label} </label>
-                                <Field name={item.name} placeholder={item.placeholder} className={item.className} /></div>
+                                <Field name={item.name} placeholder={item.placeholder} className={item.className} onBlur={props.onBlur ? (e) => props.onBlur(e, item.name) : null} /></div>
                             {errors[item?.name] && touched[item?.name] ? (
                                 <div className='text-red-600'>{errors[item?.name]}</div>
                             ) : null}
