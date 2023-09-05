@@ -157,7 +157,7 @@ const EditProfile = () => {
     </div >
 }
 const Security = () => {
-    const { userDetails, token } = useSelector(state => state.users)
+    const { userDetails } = useSelector(state => state.users)
     const [messageApi, contextHolder] = message.useMessage();
     const handleChangePassword = async (values, resetForm) => {
         const { confirmNewPassword, ...formFields } = values
@@ -169,7 +169,6 @@ const Security = () => {
         const res = await fetch(`http://localhost:4000/change-password/${userDetails._id}`, requestOptions)
         const data = await res.json();
         if (data && res.status == 200) {
-
             messageApi.info(data.msg);
             resetForm();
         } else if (data && res.status == 401) {

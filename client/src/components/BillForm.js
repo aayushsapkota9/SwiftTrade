@@ -2,8 +2,12 @@ import React, { useState, useEffect } from 'react'
 import * as Yup from 'yup';
 import { Table, Tabs, Steps, Tag, Space, AutoComplete } from 'antd';
 import CustomForm from './custom_form';
-
-const Bill = () => {
+import SendInvoice from './SendInvoice';
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux'
+import { setBillItems } from '@/redux/reducerSlice/billSlice';
+const Bill = (props) => {
+    const dispatch = useDispatch()
     const [options, setOptions] = useState([])
     const [currentItem, setCurrentItem] = useState()
     const [billItem, setBillItem] = useState([{
@@ -14,6 +18,11 @@ const Bill = () => {
     },
     ])
     const [totalBillAmount, setTotalBillAmount] = useState(0)
+    const [customerDetails, setCustomerDetails] = useState({
+        name: '',
+        address: '',
+        contact: ''
+    })
     const fetchInventoryDetails = async (page = 1, size = 10) => {
         //used to get inventory list details for autocomplete
         const res = await fetch(`http://localhost:4000/inventory/all-items?page=${page}&size=${size}`)
@@ -37,7 +46,6 @@ const Bill = () => {
     const addEmptyBillRow = () => {
         setCurrentItem()
         if (billItem[billItem.length - 1].price) {
-            debugger
             setBillItem([...billItem, {
                 key: '',
                 name: '',
@@ -45,7 +53,6 @@ const Bill = () => {
                 quantity: '',
             }])
         }
-
     }
     const fillUpCorrespondingRow = (id, currentBillItem, index) => {
         //autocomplete
@@ -57,10 +64,12 @@ const Bill = () => {
         setCurrentItem(currentBillItem)
     }
     const setQuantity = (quantity, currentBillItem, index) => {
+        debugger
         let oldBillItems = [...billItem]
-        currentBillItem.quantity = quantity.target.value
-        currentBillItem.total = currentBillItem.price * currentBillItem.quantity
-        oldBillItems[index] = currentBillItem
+        let copyCurrentBillItem = { ...currentBillItem }
+        copyCurrentBillItem.quantity = quantity.target.value
+        copyCurrentBillItem.total = copyCurrentBillItem.price * copyCurrentBillItem.quantity
+        oldBillItems[index] = copyCurrentBillItem
         setBillItem(oldBillItems)
     }
     const columns = [
@@ -119,6 +128,16 @@ const Bill = () => {
             return accumulator += currentItemPrice
         }, 0))
     }, [billItem])
+    useEffect(() => {
+        if (billItem[billItem.length - 1].price > 0) {
+            const bill = {}
+            bill[props.tabKey] = {
+                customerDetails: customerDetails,
+                billDetails: billItem,
+            }
+            dispatch(setBillItems(bill))
+        }
+    }, [props.current, billItem])
 
 
     const tableSummary = () => (
@@ -175,8 +194,11 @@ const Bill = () => {
         contact: '',
 
     }
-    const onInputNameChange = (e, name) => {
+    const onInputNameChange = (name, e) => {
+        const details = { ...customerDetails }
         console.log(name, e.target.value)
+        details[name] = e.target?.value
+        setCustomerDetails(details)
     }
 
     return (
@@ -193,16 +215,17 @@ const Bill = () => {
                 margin: '3rem'
             }} />
             <div className='flex justify-between '><button className='border-black border-2 rounded-2xl relative left-10  px-10 py-3 bg-black text-white' onClick={addEmptyBillRow}>Add new Item</button>
-
             </div>
+            {/* <div>{JSON.stringify(bill)}</div> */}
         </div>
     )
 }
-const BillForm = () => {
+const BillForm = (props) => {
     const [current, setCurrent] = useState(0);
     const onChange = (value) => {
-        console.log('onChange:', value);
+        // console.log('onChange:', value);
         setCurrent(value);
+
     };
 
 
@@ -227,7 +250,9 @@ const BillForm = () => {
                 },
             ]}
         />
-        {current == 0 ? <Bill></Bill> : null}
+        {current == 0 ? <Bill current={current} tabKey={props.tabKey}></Bill> : null}
+        {current == 1 ? <SendInvoice tabKey={props.tabKey}></SendInvoice> : null}
+
     </>
 }
 

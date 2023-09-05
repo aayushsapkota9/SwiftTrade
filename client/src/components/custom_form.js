@@ -32,7 +32,7 @@ const CustomFrom = (props) => {
                     {props.fields.map((item) => {
                         return <div className={props.errorClass}>
                             <div className='flex flex-col'><label className={item.labelClass}>{item.label} </label>
-                                <Field name={item.name} placeholder={item.placeholder} className={item.className} onBlur={props.onBlur ? (e) => props.onBlur(e, item.name) : null} /></div>
+                                <Field name={item.name} placeholder={item.placeholder} className={item.className} onBlur={props.onBlur ? (e) => props.onBlur(item.name, e) : null} /></div>
                             {errors[item?.name] && touched[item?.name] ? (
                                 <div className='text-red-600'>{errors[item?.name]}</div>
                             ) : null}
