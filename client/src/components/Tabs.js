@@ -3,54 +3,52 @@ import { Table, Tabs, Steps, Tag, Space, AutoComplete } from 'antd';
 import BillForm from './BillForm';
 
 const BillingTab = () => {
-    const initialTabItems = [
+    const initialItems = [
         {
             label: 'Tab 1',
-            children: <BillForm></BillForm>,
-            key: '1',
+            children: <BillForm tabKey={'newTab0'}></BillForm>,
+            key: 'newTab0',
             closable: false,
         },
     ]
-    const [activeTabKey, setActiveTabKey] = useState(initialTabItems[0].key);
-    const [items, setItems] = useState(initialTabItems);
-    const newTabIndex = useRef(0);
-    const onChange = (newActiveTabKey) => {
-        console.log(newActiveTabKey)
-        setActiveTabKey(newActiveTabKey);
+    const [activeKey, setActiveKey] = useState(initialItems[0].key);
+    const [items, setItems] = useState(initialItems);
+    const newTabIndex = useRef(1);
+    const onChange = (newActiveKey) => {
+        setActiveKey(newActiveKey);
     };
-    const onTabEdit = (targetKey, action) => {
-        const remove = (targetKey) => {
-            let newActiveTabKey = activeTabKey;
-            let lastIndex = -1;
-            items.forEach((item, i) => {
-                if (item.key === targetKey) {
-                    lastIndex = i - 1;
-                }
-            });
-            const newPanes = items.filter((item) => item.key !== targetKey);
-            if (newPanes.length && newActiveTabKey === targetKey) {
-                if (lastIndex >= 0) {
-                    newActiveTabKey = newPanes[lastIndex].key;
-                } else {
-                    newActiveTabKey = newPanes[0].key;
-                }
+    const add = () => {
+        const newActiveKey = `newTab${newTabIndex.current++}`;
+        console.log(newActiveKey)
+        const newPanes = [...items];
+        newPanes.push({
+            label: 'Tab' + newTabIndex.current,
+            children: <BillForm tabKey={newActiveKey}></BillForm>,
+            key: newActiveKey,
+        });
+        setItems(newPanes);
+        setActiveKey(newActiveKey);
+    };
+    const remove = (targetKey) => {
+        let newActiveKey = activeKey;
+        let lastIndex = -1;
+        items.forEach((item, i) => {
+            if (item.key === targetKey) {
+                lastIndex = i - 1;
             }
-            setItems(newPanes);
-            setActiveTabKey(newActiveTabKey);
-        };
-        const add = () => {
-            const newActiveTabKey = `newTab${newTabIndex.current++}`;
-            console.log(newActiveTabKey)
-            const newPanes = [...items];
-            newPanes.push({
-                label: 'New Tab',
-                children: <BillForm></BillForm>,
-                key: newActiveTabKey,
-            });
-            setItems(newPanes);
-            setActiveTabKey(newActiveTabKey);
-        };
-
+        });
+        const newPanes = items.filter((item) => item.key !== targetKey);
+        if (newPanes.length && newActiveKey === targetKey) {
+            if (lastIndex >= 0) {
+                newActiveKey = newPanes[lastIndex].key;
+            } else {
+                newActiveKey = newPanes[0].key;
+            }
+        }
+        setItems(newPanes);
+        setActiveKey(newActiveKey);
+    };
+    const onEdit = (targetKey, action) => {
         if (action === 'add') {
             add();
         } else {
@@ -64,8 +62,8 @@ const BillingTab = () => {
             className='w-full '
             type="editable-card"
             onChange={onChange}
-            activeKey={activeTabKey}
-            onEdit={onTabEdit}
+            activeKey={activeKey}
+            onEdit={onEdit}
             items={items}
         />
     )
