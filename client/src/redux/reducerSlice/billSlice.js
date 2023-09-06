@@ -1,18 +1,25 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 export const initialState = {
-    allBills: {}
 };
 const billsSlice = createSlice({
     name: 'bills',
     initialState,
     reducers: {
         setBillItems(state, actions) {
-            const bill = actions.payload.bill;
-
+            const { customerDetails, billDetails, tabKey } = actions.payload;
+            const allBills = {}
+            allBills[tabKey] = {
+                customerDetails,
+                billDetails
+            }
             return {
                 ...state,
-                bill
+                tabKey: {
+                    customerDetails,
+                    billDetails
+                }
+
             }
 
         },

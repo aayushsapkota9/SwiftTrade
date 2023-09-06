@@ -7,6 +7,7 @@ import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux'
 import { setBillItems } from '@/redux/reducerSlice/billSlice';
 const Bill = (props) => {
+    const billDetails = useSelector(state => state.bills)
     const dispatch = useDispatch()
     const [options, setOptions] = useState([])
     const [currentItem, setCurrentItem] = useState()
@@ -64,7 +65,6 @@ const Bill = (props) => {
         setCurrentItem(currentBillItem)
     }
     const setQuantity = (quantity, currentBillItem, index) => {
-        debugger
         let oldBillItems = [...billItem]
         let copyCurrentBillItem = { ...currentBillItem }
         copyCurrentBillItem.quantity = quantity.target.value
@@ -130,12 +130,11 @@ const Bill = (props) => {
     }, [billItem])
     useEffect(() => {
         if (billItem[billItem.length - 1].price > 0) {
-            const bill = {}
-            bill[props.tabKey] = {
+            dispatch(setBillItems({
                 customerDetails: customerDetails,
                 billDetails: billItem,
-            }
-            dispatch(setBillItems(bill))
+                tabKey: props.tabKey
+            }))
         }
     }, [props.current, billItem])
 
@@ -216,7 +215,7 @@ const Bill = (props) => {
             }} />
             <div className='flex justify-between '><button className='border-black border-2 rounded-2xl relative left-10  px-10 py-3 bg-black text-white' onClick={addEmptyBillRow}>Add new Item</button>
             </div>
-            {/* <div>{JSON.stringify(bill)}</div> */}
+            <div className=''>{JSON.stringify(billDetails)}</div>
         </div>
     )
 }
