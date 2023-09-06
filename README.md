@@ -164,18 +164,15 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 ## Features
 
 - [x] Add inventory
-- [ ] Add sales
+- [x] Add sales
 - [x] View inventory
 - [ ] View Sales
-- [ ] Edit sales
+- [x] Pdf generator/invoice
 - [x] Edit inventory items
-- [ ] Add bank accounts
-- [ ] Can do transaction through bank
+- [ ] Data visualization
+- [ ] Nodemailer
+- [ ] Sentry/Log rocket
 
-- [ ] Add customers/vendors
-- [ ] Balance dashboard
-- [ ] View and edit Banks
-- [ ] View and edit customers/vendors
 
 ## Second Phase
 
