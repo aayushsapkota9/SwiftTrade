@@ -29,7 +29,7 @@ const Invoice = ({ invoice }) => {
                 <InvoiceNo invoice={invoice} />
                 <BillTo invoice={invoice} />
                 <InvoiceItemsTable invoice={invoice} />
-                {/* <InvoiceThankYouMsg /> */}
+                <InvoiceThankYouMsg />
             </Page>
         </Document>
     )
@@ -126,6 +126,26 @@ const InvoiceItemsTable = ({ invoice }) => {
             <InvoiceTableRow items={invoice.items} />
             <InvoiceTableBlankSpace rowsCount={tableRowsCount - invoice.items.length} />
             <InvoiceTableFooter items={invoice.items} />
+        </View>
+    )
+};
+const InvoiceThankYouMsg = () => {
+    const styles = StyleSheet.create({
+
+        titleContainer: {
+            flexDirection: 'row',
+            marginTop: 12
+        },
+        reportTitle: {
+            fontSize: 12,
+            textAlign: 'center',
+            textTransform: 'uppercase',
+        }
+    });
+
+    return (
+        <View style={styles.titleContainer}>
+            <Text style={styles.reportTitle}>Thank you for your business</Text>
         </View>
     )
 };
