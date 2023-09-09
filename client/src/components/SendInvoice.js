@@ -2,7 +2,7 @@ import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux'
 import React, { Component, Fragment } from 'react';
 import { PDFViewer } from '@react-pdf/renderer'
-import Invoice from './Bill_Pdf';
+import Invoice from './BillPdf';
 const SendInvoice = (props) => {
     const { billDetails, customerDetails } = useSelector(state => state.bills.tabKey)
     const today = new Date()
@@ -29,12 +29,14 @@ const SendInvoice = (props) => {
         }),
 
     };
-    // const { customerDetails, billItems } = useSelector(state => state.bills)
     return (
-        <div className=''>
+        <div className='flex gap-64'>
+            <div className='px-16 py-10'>
+                <button className='border-2 border-black-400 px-10 py-4 bg-black text-white rounded-2xl'>Email invoice to customer</button>
+            </div>
             <div>
                 <Fragment>
-                    <PDFViewer width="1000" height="600" className="app" >
+                    <PDFViewer width="800" height="1200" className="app" >
                         <Invoice invoice={invoiceData} />
                     </PDFViewer>
                 </Fragment>

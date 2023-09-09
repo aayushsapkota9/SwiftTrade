@@ -1,12 +1,13 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
-const inventorySchema = new Schema({
+const billSchema = new Schema({
     customerDetails: Object,
     billDetails: Array,
-    Date: new Date(),
+    date: String,
+    billNo: Number,
 });
 
 
-const Inventory = mongoose.model('Inventory', inventorySchema);
-module.exports = Inventory;
+const Bill = mongoose.model('Bills', billSchema);
+module.exports = Bill;

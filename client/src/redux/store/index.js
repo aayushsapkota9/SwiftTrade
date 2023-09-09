@@ -9,6 +9,7 @@ import bills from '../reducerSlice/billSlice'
 const persistConfig = {
     key: 'root',
     storage,
+    whitelist: ['users']
 
 }
 

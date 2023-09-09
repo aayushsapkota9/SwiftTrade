@@ -5,12 +5,14 @@ const connection = require('./db/connection')
 connection()
 const userRoute = require("./routes/users")
 const inventoryRoute = require("./routes/inventory")
+const billRoute = require('./routes/bill')
 app.use(express.json())
 const cors = require('cors')
 app.use(cors())
 
 app.use("/", userRoute);
 app.use("/inventory", inventoryRoute);
+app.use("/", billRoute);
 
 
 app.listen(process.env.PORT, () => {
