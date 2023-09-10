@@ -2,7 +2,7 @@ import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux'
 import React, { Component, Fragment } from 'react';
 import { PDFViewer } from '@react-pdf/renderer'
-import Invoice from './Bill_Pdf';
+import Invoice from './BillPdf';
 const SendInvoice = (props) => {
     const { billDetails, customerDetails } = useSelector(state => state.bills.tabKey)
     const today = new Date()

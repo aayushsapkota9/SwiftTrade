@@ -5,11 +5,13 @@ const connection = require('./db/connection')
 connection()
 const userRoute = require("./routes/users")
 const inventoryRoute = require("./routes/inventory")
+const billRoute = require("./routes/bill")
 app.use(express.json())
 const cors = require('cors')
 app.use(cors())
 
 app.use("/", userRoute);
+app.use("/", billRoute);
 app.use("/inventory", inventoryRoute);
 
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import * as Yup from 'yup';
-import { Table, Tabs, Steps, Tag, Space, AutoComplete } from 'antd';
+import { Table, Tabs, Steps, Tag, Space, AutoComplete, message } from 'antd';
 import CustomForm from './custom_form';
 import SendInvoice from './SendInvoice';
 import { useDispatch } from 'react-redux';
@@ -221,14 +221,42 @@ const Bill = (props) => {
 }
 const BillForm = (props) => {
     const [current, setCurrent] = useState(0);
-    const onChange = (value) => {
-        // console.log('onChange:', value);
+    const { tabKey } = useSelector(state => state.bills)
+    const [messageApi, contextHolder] = message.useMessage();
+    const onChange = async (value) => {
+        const previousValue = current
+        const today = new Date()
+        const date = `${today.getFullYear()}-${today.getMonth()}-${today.getDate()}`
+        const billDetails = { ...tabKey, date }
         setCurrent(value);
+        console.log(previousValue, value)
+        if (previousValue == 0 && value == 1) {
+            try {
+                const res = await fetch('http://localhost:4000/bill', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(billDetails)
+                });
+                const data = await res.json();
+
+                if (data && res.status == 200 && data.success) {
+
+                    dispatch(setUserDetails(data))
+                    messageApi.info(data.msg);
+                    router.push('/dashboard')
+                } else {
+                    messageApi.info(data.msg);
+                }
+            } catch (error) {
+
+            }
+        }
 
     };
 
 
     return <>
+        {contextHolder}
         <Steps
             type="navigation"
             current={current}

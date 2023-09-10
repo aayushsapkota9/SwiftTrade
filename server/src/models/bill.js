@@ -4,9 +4,9 @@ const { Schema } = mongoose;
 const inventorySchema = new Schema({
     customerDetails: Object,
     billDetails: Array,
-    Date: new Date(),
+    Date: String,
 });
 
 
-const Inventory = mongoose.model('Inventory', inventorySchema);
-module.exports = Inventory;
+const Bills = mongoose.model('Bills', inventorySchema);
+module.exports = Bills;
