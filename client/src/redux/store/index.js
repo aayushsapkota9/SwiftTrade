@@ -5,17 +5,18 @@ import { persistReducer, persistStore } from 'redux-persist';
 import logger from 'redux-logger'
 import users from '../reducerSlice/userSlice'
 import bills from '../reducerSlice/billSlice'
-
+import tasks from '../reducerSlice/todoSlice'
 const persistConfig = {
     key: 'root',
     storage,
-    whitelist: ['users']
+    whitelist: ['users', 'todos']
 
 }
 
 const reducer = combineReducers({
     users,
     bills,
+    tasks,
 })
 
 const persistedReducer = persistReducer(persistConfig, reducer)
