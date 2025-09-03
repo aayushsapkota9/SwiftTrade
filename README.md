@@ -209,7 +209,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 ## Contact
 
-Your Name - [@acro_vision](https://twitter.com/acro_vision) - aayushsapkota9@gmail.com
+Aayush Sapkota - [@acro_vision](https://twitter.com/acro_vision) - aayushsapkota9@gmail.com
 
 Project Link: [https://github.com/aayushsapkota9/SwiftTrade](https://github.com/aayushsapkota9/SwiftTrade)
 
